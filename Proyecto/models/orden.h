@@ -1,8 +1,12 @@
-struct Orden   
+#pragma once
+
+typedef struct Orden   
 {
     int id;
-    int id_producto;
+    char producto [50];
     int cantidad;
     int id_mesa;
-    bool estado; // true: orden pendiente, false: orden lsta
-};
+    bool estado; // true: orden pendiente, false: orden lista
+}*PtrOrden;
+
+

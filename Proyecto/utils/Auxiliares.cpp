@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "../models/producto.h"
+#include "../models/orden.h"
 #include "../utils/Auxiliares.h"
 using namespace std;
 
@@ -37,4 +38,42 @@ void eliminarProducto(void* informacion){
     delete(producto);
 }
 
-//
+//Operaciones para las ordenes
+
+void* crearOrden(void){
+    PtrOrden orden = new(Orden);
+
+    //Numero de orden
+    static int contador = 1;
+    orden->id = contador++;
+
+    cout<<"Ingrese el producto a pedir:"<<endl;
+    cin>>orden->producto;
+
+    cout<<"Ingrese la cantidad:"<<endl;
+    cin>>orden->cantidad;
+
+    cout<<"Ingrese el numero de mesa:"<<endl;
+    cin>>orden->id_mesa;
+
+    orden->estado = true; //Orden con estadi pendiente al entrar
+
+    return (void*)orden;
+}
+
+void leerOrden(void* informacion){
+    PtrOrden orden = static_cast<PtrOrden>(informacion);
+    cout<<"Numero de orden:"<< orden->id << endl;
+    cout<<"Numero mesa:"<< orden->id_mesa << endl;
+    cout<<"Producto solicitado:"<< orden->producto << endl;
+    cout<<"Cantidad solicitada:"<< orden->cantidad << endl;
+    cout<<"Estado de la orden:"<< (orden->estado ? "Pendiente" : "Completada") << endl;
+}
+
+void actualizarOrden(void* informacion){
+    // pend
+}
+
+void eliminarOrden(void* informacion){
+    // pend
+}

@@ -17,4 +17,13 @@ void leerProducto(void* informacion);
 
 void eliminarProducto(void* informacion);
 
-//
+
+//Operaciones para las ordenes
+
+void* crearOrden(void);
+
+void leerOrden(void* informacion);
+
+void actualizarOrden(void* informacion);
+
+void eliminarOrden(void* informacion);
