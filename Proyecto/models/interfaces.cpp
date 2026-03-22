@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../utils/Auxiliares.h"
-#include "../services/productoService.h"
+#include "../server/utils/Auxiliares.h"
+#include "../server/productos/productoService.h"
 using namespace std;
 
 //--------------------Menú Productos--------------------//

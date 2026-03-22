@@ -4,7 +4,7 @@ CXXFLAGS = -Wall -I./include
 all: servidor cliente interfaces
 
 interfaces:
-	$(CXX) $(CXXFLAGS) models/interfaces.cpp services/productoService.cpp utils/Auxiliares.cpp -o build/interfaces
+	$(CXX) $(CXXFLAGS) models/interfaces.cpp server/productos/productoService.cpp server/utils/Auxiliares.cpp -o build/interfaces
 
 servidor:
 	$(CXX) $(CXXFLAGS) server/server.cpp -o build/servidor
