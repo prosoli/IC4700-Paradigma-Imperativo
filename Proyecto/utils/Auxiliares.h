@@ -1,29 +1,25 @@
 #pragma once
 
-typedef struct OperacionesStructs {
-    void*  (*creacion)(void);
-    void  (*listado)(void*);
-    void  (*actualizacion)(void*);
-    void (*eliminacion)(void*);
-};
+#include <iostream>
+#include "../models/operacionesstructs.h"
+#include "../models/elementolista.h"
 
-//Operaciones para los productos
+PtrElemento buscarElemento(PtrElemento& lista, int indice);
 
-void* crearProducto(void);
+//Operaciones del CRUD
 
-void actualizarProducto(void* informacion);
+//Crear (C)
+void insertarElemento(PtrElemento& lista, OperacionesStructs operaciones);
 
-void leerProducto(void* informacion);
+//Leer (R)
+void leerElementos(PtrElemento& lista);
 
-void eliminarProducto(void* informacion);
+//Actualizar (U)
+void actualizarElemento(PtrElemento& lista);
 
+//Eliminar (D)
+void eliminarElemento(PtrElemento& lista);
+//
 
-//Operaciones para las ordenes
-
-void* crearOrden(void);
-
-void leerOrden(void* informacion);
-
-void actualizarOrden(void* informacion);
-
-void eliminarOrden(void* informacion);
+//Función para eliminar una lista por completo
+void eliminarLista(PtrElemento& lista);
