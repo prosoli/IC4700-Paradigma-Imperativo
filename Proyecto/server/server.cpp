@@ -37,6 +37,8 @@ int main() {
 
             read(clientSocket, buffer, sizeof(buffer));
 
+            send(clientSocket, "hola recibido", 17, 0);
+
             cout << "Mensaje recibido: " << buffer << endl;
 
             close(clientSocket);
