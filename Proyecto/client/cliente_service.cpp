@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "cliente_socket.h"
-#include "../models/elemento.h"
+#include "../models/elementolista.h"
 
 using namespace std;
 

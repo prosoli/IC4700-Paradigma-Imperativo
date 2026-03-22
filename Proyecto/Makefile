@@ -10,7 +10,7 @@ servidor:
 	$(CXX) $(CXXFLAGS) server/server.cpp -o build/servidor
 
 cliente:
-	$(CXX) $(CXXFLAGS) client/cliente.cpp -o build/cliente
+	$(CXX) $(CXXFLAGS) client/cliente.cpp client/cliente_menus.cpp client/cliente_service.cpp client/cliente_socket.cpp -o build/cliente
 
 clean:
 	rm -f build/servidor build/cliente build/interfaces
