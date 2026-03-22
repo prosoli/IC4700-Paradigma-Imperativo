@@ -1,12 +1,6 @@
-#pragma once
-
 #include <iostream>
 #include <stdlib.h>
-#include "../models/operacionesstructs.h"
 #include "../utils/Auxiliares.h"
-//Revisar si es necesaio poner estos:
-#include "../services/productoService.h"
-#include "../services/ordenService.h"
 using namespace std;
 
 PtrElemento buscarElemento(PtrElemento& lista, int indice){
