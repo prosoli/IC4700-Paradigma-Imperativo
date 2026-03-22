@@ -1,7 +1,10 @@
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 #include <iostream>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include "../models/messageCode.h"
 
 using namespace std;
 
@@ -33,16 +36,71 @@ int main() {
 
         if(fork() == 0) { // proceso hijo
 
-            char buffer[1024];
+            char buffer[1024] = {0};
+            ssize_t bytes_read = read(clientSocket, buffer, sizeof(buffer) - 1);
 
-            read(clientSocket, buffer, sizeof(buffer));
+            if (bytes_read > 0) {
+                buffer[bytes_read] = '\0'; // asegurar fin de string
+                cout << "Mensaje recibido del cliente (raw):" << endl;
+                cout << buffer << endl;
+                // Intentar deserializar como JSON
+                try {
+                    nlohmann::json json_msg = nlohmann::json::parse(buffer);
+                    cout << "\nMensaje recibido (JSON parseado):" << endl;
+                    for (auto it = json_msg.begin(); it != json_msg.end(); ++it) {
+                        cout << it.key() << ": " << it.value() << endl;
+                    }
+                    // Mostrar el nombre del comando según el Type
+                    if (json_msg.contains("Type")) {
+                        int type_code = json_msg["Type"].get<int>();
+                        MessageCode code = static_cast<MessageCode>(type_code);
+                        string comando;
+                        switch (code) {
+                            case Disconnect:   comando = "Disconnect"; break;
+                            case CreateOrder:  comando = "CreateOrder"; break;
+                            case ViewOrders:   comando = "ViewOrders"; break;
+                            case ModifyOrder:  comando = "ModifyOrder"; break;
+                            case ViewProducts: comando = "ViewProducts"; break;
+                            default:           comando = "Desconocido"; break;
+                        }
+                        cout << "\nComando recibido (Type): " << comando << endl;
+
+                        // Si el comando es ViewOrders, responder con JSON de órdenes (datos quemados)
+                        if (code == ViewOrders) {
+                            nlohmann::json ordenes = {
+                                {"ordenes", {
+                                    { {"id", 1}, {"mesa", 5}, {"productos", { {"Pizza", 2}, {"Refresco", 3} } } },
+                                    { {"id", 2}, {"mesa", 3}, {"productos", { {"Hamburguesa", 1}, {"Papas", 2} } } }
+                                }}
+                            };
+                            std::string respuesta = ordenes.dump();
+                            send(clientSocket, respuesta.c_str(), respuesta.size(), 0);
+                            close(clientSocket);
+                            return 0;
+                        }
+
+                        if (code == ViewProducts) {
+                            nlohmann::json productos = {
+                                {"productos", {
+                                    { {"nombre", "Pizza"}, {"precio", 10.99} },
+                                    { {"nombre", "Hamburguesa"}, {"precio", 8.99} }
+                                }}
+                            };
+                            std::string respuesta = productos.dump();
+                            send(clientSocket, respuesta.c_str(), respuesta.size(), 0);
+                            close(clientSocket);
+                            return 0;
+                        }
+                    }
+                } catch (const std::exception& e) {
+                    cout << "No se pudo parsear el mensaje como JSON: " << e.what() << endl;
+                }
+            } else {
+                cout << "No se recibió mensaje o error de lectura." << endl;
+            }
 
             send(clientSocket, "hola recibido", 17, 0);
-
-            cout << "Mensaje recibido: " << buffer << endl;
-
             close(clientSocket);
-
             return 0;
         }
     }
