@@ -162,7 +162,7 @@ void mostrarOrdenesMenu(){
     std::cout << "\033[34m" << "╔══════════════════════════════════════════════════════════════╗" << "\033[0m" << std::endl;
     std::cout << "\033[1;33m" << "                ÓRDENES ACTUALES" << "\033[0m" << std::endl;
     std::cout << "\033[34m" << "╠══════════════════════════════════════════════════════════════╣" << "\033[0m" << std::endl;
-    nlohmann::json json_respuesta = mostrarOrdenes();
+    nlohmann::json json_respuesta = mostrarOrdenes(); //muestro las ordenes para que el usuario escoja el id de la orden a modificar
     try {
         if (json_respuesta.contains("ordenes")) {
             auto ordenes_json = json_respuesta["ordenes"];
@@ -188,7 +188,7 @@ void mostrarOrdenesMenu(){
 }
 
 
-void mostrarCrearOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
+void mostrarCrearOrdenMenu(){
 
     int numero_mesa;
     vector<pair<string, int>> lista_productos; //productos que el usuario agregaa a la orden
@@ -230,7 +230,7 @@ void mostrarCrearOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
 }
 
 
-void mostrarModificarOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
+void mostrarModificarOrdenMenu(){
 
     int id_orden;
     vector<pair<string, int>> lista_productos;
@@ -252,7 +252,7 @@ void mostrarModificarOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
     
     lista_productos = modificarProducto(); //pido los productos a modificar o agregar a la orden
 
-    // Mostrar resumen de la modificación
+    // muestra resumen de la modificación
     std::cout << "\033[36m" << "──────────────────────────────────────────────────────────────" << "\033[0m" << std::endl;
     std::cout << "\033[1;32mModificación a aplicar en la orden \033[0m" << id_orden << ":" << std::endl;
     for (const auto& p : lista_productos) {
@@ -274,7 +274,7 @@ void mostrarModificarOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
 }
 
 
-void mostrarMenu(PtrElemento& ordenes, PtrElemento& productos){
+void mostrarMenu(){
     while (true)
     {
         system("clear");
@@ -282,9 +282,9 @@ void mostrarMenu(PtrElemento& ordenes, PtrElemento& productos){
         std::cout << "\033[1;33m" << "              MENÚ PRINCIPAL DEL SISTEMA  " << "\033[0m" << std::endl;
         std::cout << "\033[36m" << "╠═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═╣" << "\033[0m" << std::endl;
         int option;
-        std::cout << "\033[32m▶ 1.\033[0m Ver \033[1;36mÓrdenes\033[0m" << std::endl;
-        std::cout << "\033[32m▶ 2.\033[0m Crear \033[1;35mOrden\033[0m" << std::endl;
-        std::cout << "\033[32m▶ 3.\033[0m Modificar \033[1;33mOrden\033[0m" << std::endl;
+        std::cout << "\033[32m-> 1.\033[0m Ver \033[1;36mÓrdenes\033[0m" << std::endl;
+        std::cout << "\033[32m-> 2.\033[0m Crear \033[1;35mOrden\033[0m" << std::endl;
+        std::cout << "\033[32m-> 3.\033[0m Modificar \033[1;33mOrden\033[0m" << std::endl;
         std::cout << "\033[31mX 4.\033[0m Salir" << std::endl;
         std::cout << "\033[36m" << "╚══════════════════════════════════════════════════════════════╝" << "\033[0m" << std::endl;
         std::cout << "\033[1;34mIngrese una opción: \033[0m";
@@ -305,10 +305,10 @@ void mostrarMenu(PtrElemento& ordenes, PtrElemento& productos){
                 mostrarOrdenesMenu();
                 break;
             case 2:
-                mostrarCrearOrdenMenu(ordenes, productos);
+                mostrarCrearOrdenMenu();
                 break;
             case 3:
-                mostrarModificarOrdenMenu(ordenes, productos);
+                mostrarModificarOrdenMenu();
                 break;
             case 4:
                 std::cout << "\033[31mSaliendo...\033[0m" << std::endl;
@@ -325,8 +325,7 @@ void mostrarMenu(PtrElemento& ordenes, PtrElemento& productos){
 
 void pantallaInicial(){
     system("clear");
-    // Imprimir el ASCII art
-    const char* ruta = "../client/assets/ascii-art.txt";
+    //imprime el ascci de inico
     std::ifstream asciiFile("../client/assets/ascii-art.txt");
     if (asciiFile.is_open()) {
         std::string line;

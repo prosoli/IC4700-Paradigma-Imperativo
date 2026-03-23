@@ -7,13 +7,10 @@
 #include "cliente_menus.h"
 
 using namespace std;
-//inicializo las listas de ordenes y productos
-PtrElemento ordenes = NULL;
-PtrElemento productos = NULL;
 
 
 int main() {
     pantallaInicial();
-    mostrarMenu(ordenes, productos);
+    mostrarMenu();
     return 0;
 }

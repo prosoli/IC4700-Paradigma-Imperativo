@@ -2,9 +2,9 @@
 #include <nlohmann/json.hpp>
 
 
-void mostrarMenu(PtrElemento& ordenes, PtrElemento& productos);
-void mostrarCrearOrdenMenu(PtrElemento& ordenes, PtrElemento& productos);
-void mostrarModificarOrdenMenu(PtrElemento& ordenes, PtrElemento& productos);
+void mostrarMenu();
+void mostrarCrearOrdenMenu();
+void mostrarModificarOrdenMenu();
 void mostrarOrdenesMenu();
 void mostrarProductosMenu();
 void mostrarMesasDisponible();
