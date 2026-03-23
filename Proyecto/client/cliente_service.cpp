@@ -8,6 +8,17 @@
 
 using namespace std;
 
+nlohmann::json mostrarMesas(){
+
+    nlohmann::json json_msg = {
+        {"Type", static_cast<unsigned char>(MessageCode::ViewTables)}
+    };
+    std::string mensaje = json_msg.dump(); // Convierte el objeto JSON a una cadena
+    std::string respuesta = enviarSolicitudAlServidor(mensaje.c_str()); // Envía la cadena al servidor y recibe la respuesta
+    nlohmann::json json_respuesta = nlohmann::json::parse(respuesta); // Parsea la respuesta del servidor de vuelta a un objeto JSON
+    return json_respuesta; // Retorna el objeto JSON con la respuesta del servidor
+}
+
 nlohmann::json mostrarOrdenes(){
     nlohmann::json json_msg = {
         {"Type", static_cast<unsigned char>(MessageCode::ViewOrders)}

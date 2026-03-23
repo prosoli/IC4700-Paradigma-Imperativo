@@ -56,7 +56,7 @@ int main() {
                         MessageCode code = static_cast<MessageCode>(type_code);
                         string comando;
                         switch (code) {
-                            case Disconnect:   comando = "Disconnect"; break;
+                            case ViewTables:   comando = "ViewTables"; break;
                             case CreateOrder:  comando = "CreateOrder"; break;
                             case ViewOrders:   comando = "ViewOrders"; break;
                             case ModifyOrder:  comando = "ModifyOrder"; break;
@@ -91,6 +91,20 @@ int main() {
                             close(clientSocket);
                             return 0;
                         }
+
+                        if (code == ViewTables) {
+                            nlohmann::json mesas = {
+                                {"mesas", {
+                                    { {"numero", 1}},
+                                    { {"numero", 2}}
+                                }}
+                            };
+                            std::string respuesta = mesas.dump();
+                            send(clientSocket, respuesta.c_str(), respuesta.size(), 0);
+                            close(clientSocket);
+                            return 0;
+                        }
+
                     }
                 } catch (const std::exception& e) {
                     cout << "No se pudo parsear el mensaje como JSON: " << e.what() << endl;

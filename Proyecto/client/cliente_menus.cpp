@@ -9,6 +9,29 @@
 #include <nlohmann/json.hpp>
 
 
+void mostrarMesasDisponible(){
+
+    nlohmann::json json_respuesta = mostrarMesas(); //llamo a la funcion que solicta las mesas y retorna un json
+    try {
+
+        if(json_respuesta.contains("mesas")){
+            cout << "Mesas disponibles:" << endl;
+            auto mesas = json_respuesta["mesas"];
+            for(const auto& mesa : mesas){
+                cout << "Mesa: " << mesa["numero"] << "  ";
+            }
+        }   cout << endl;
+    }
+    catch (const std::exception& e) {
+        cout << "Error al parsear la respuesta JSON: " << e.what() << endl;
+    }
+
+    // Espera a que el usuario presione enter para volver al menú
+    cout << "Presione Enter para continuar...";
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    cin.get();
+}
+
 //este metodo es utilizado apra confirar acciones que haga el usuario
 bool confirmarAccion(){
     int confirmacion;
@@ -158,12 +181,13 @@ void mostrarOrdenesMenu(){
 void mostrarCrearOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
 
     int numero_mesa;
-    string producto;
-    int cantidad;
     vector<pair<string, int>> lista_productos; //productos que el usuario agregaa a la orden
 
     
     cout << "\n--- Crear Nueva Orden ---" << endl;
+
+    mostrarMesasDisponible(); //muestro las mesas disponibles para que el usuario escoja
+
     //declaro variable para almacenar el numero de mesa ingresado por el usuario
     cout << "Ingrese el número de mesa: ";
     while (!(cin >> numero_mesa) || numero_mesa <= 0) {
@@ -197,9 +221,6 @@ void mostrarModificarOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
 
     int id_orden;
     vector<pair<string, int>> lista_productos;
-    string producto;
-    int cantidad;
-    int confirmacion;
 
     //muesto las ordenes existentes para que el usuario ingrese el id
     mostrarOrdenesMenu();
