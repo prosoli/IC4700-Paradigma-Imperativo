@@ -6,78 +6,86 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include "cliente_service.h"
+
 #include <nlohmann/json.hpp>
+#include <fstream>
 
 
 void mostrarMesasDisponible(){
 
-    nlohmann::json json_respuesta = mostrarMesas(); //llamo a la funcion que solicta las mesas y retorna un json
+    std::cout << "\033[36m" << "╔══════════════════════════════════════════════════════════════╗" << "\033[0m" << std::endl;
+    std::cout << "\033[1;33m" << "                MESAS DISPONIBLES" << "\033[0m" << std::endl;
+    std::cout << "\033[36m" << "╠══════════════════════════════════════════════════════════════╣" << "\033[0m" << std::endl;
+    nlohmann::json json_respuesta = mostrarMesas();
     try {
-
         if(json_respuesta.contains("mesas")){
-            cout << "Mesas disponibles:" << endl;
+            std::cout << "\033[32mMesas disponibles:\033[0m" << std::endl;
             auto mesas = json_respuesta["mesas"];
             for(const auto& mesa : mesas){
-                cout << "Mesa: " << mesa["numero"] << "  ";
+                std::cout << "\033[1;36m[ " << mesa["numero"] << " ]\033[0m  ";
             }
-        }   cout << endl;
+        }
+        std::cout << std::endl;
     }
     catch (const std::exception& e) {
-        cout << "Error al parsear la respuesta JSON: " << e.what() << endl;
+        std::cout << "\033[31mError al parsear la respuesta JSON: " << e.what() << "\033[0m" << std::endl;
     }
-
-    // Espera a que el usuario presione enter para volver al menú
-    cout << "Presione Enter para continuar...";
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    cin.get();
+    std::cout << "\033[36m" << "╚══════════════════════════════════════════════════════════════╝" << "\033[0m" << std::endl;
+    std::cout << "\033[1;34mPresione Enter para continuar...\033[0m";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
 }
 
 //este metodo es utilizado apra confirar acciones que haga el usuario
 bool confirmarAccion(){
     int confirmacion;
-    cout << "¿Está seguro que desea realizar esta acción?" << endl;
-    cout << "1. Si" << endl;
-    cout << "2. No" << endl;
-    
-    while (!(cin >> confirmacion) || (confirmacion != 1 && confirmacion != 2)) {
-        cin.clear();
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        cout << "Opción inválida. Intente de nuevo: ";
+    std::cout << "\033[36m" << "╔══════════════════════════════════════════════════════════════╗" << "\033[0m" << std::endl;
+    std::cout << "\033[1;33m¿Está seguro que desea realizar esta acción?\033[0m" << std::endl;
+    std::cout << "\033[36m" << "╠══════════════════════════════════════════════════════════════╣" << "\033[0m" << std::endl;
+    std::cout << "\033[32m1. Si\033[0m" << std::endl;
+    std::cout << "\033[31m2. No\033[0m" << std::endl;
+    std::cout << "\033[36m" << "╚══════════════════════════════════════════════════════════════╝" << "\033[0m" << std::endl;
+    while (!(std::cin >> confirmacion) || (confirmacion != 1 && confirmacion != 2)) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "\033[31mOpción inválida. Intente de nuevo: \033[0m";
     }
-    cin.ignore(); // Limpiar salto de línea
+    std::cin.ignore(); // Limpiar salto de línea
     if (confirmacion == 1) {
         return true;
     }
     else {
-        cout << "Acción cancelada. Volviendo al menú..." << endl;
-        // Esperar a que el usuario presione enter para volver al menú
-        cout << "Presione Enter para continuar...";
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        cin.get();
+        std::cout << "\033[31mAcción cancelada. Volviendo al menú...\033[0m" << std::endl;
+        std::cout << "\033[1;34mPresione Enter para continuar...\033[0m";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
         return false;
     }
 }
 
 void mostrarProductosMenu(){
-    nlohmann::json json_respuesta = mostrarProductos(); //llamo a la funcion que solicta los productos y retorna un json
+    std::cout << "\033[35m" << "╔══════════════════════════════════════════════════════════════╗" << "\033[0m" << std::endl;
+    std::cout << "\033[1;33m" << "                PRODUCTOS DISPONIBLES" << "\033[0m" << std::endl;
+    std::cout << "\033[35m" << "╠══════════════════════════════════════════════════════════════╣" << "\033[0m" << std::endl;
+    nlohmann::json json_respuesta = mostrarProductos();
     try {
-        if (json_respuesta.contains("productos")) { //verifico que el json tenga el campo "productos"
-            auto productos_json = json_respuesta["productos"]; //accedo al array de productos dentro del json
-            cout << "Productos disponibles:" << endl;
-            for (const auto& producto : productos_json) { //recorro el array de productos y muestro su nombre y precio
-                cout << "Producto: " << producto["nombre"] << " | Precio: " << producto["precio"] << endl;
+        if (json_respuesta.contains("productos")) {
+            auto productos_json = json_respuesta["productos"];
+            std::cout << "\033[32mProductos disponibles:\033[0m" << std::endl;
+            for (const auto& producto : productos_json) {
+                std::cout << "\033[1;36mProducto: \033[0m" << producto["nombre"] << " | "
+                          << "\033[1;33mPrecio: \033[0m" << producto["precio"] << std::endl;
             }
         } else {
-            cout << "No se encontraron productos en la respuesta." << endl;
+            std::cout << "\033[31mNo se encontraron productos en la respuesta.\033[0m" << std::endl;
         }
     } catch (const std::exception& e) {
-        cout << "Error al parsear la respuesta JSON: " << e.what() << endl;
+        std::cout << "\033[31mError al parsear la respuesta JSON: " << e.what() << "\033[0m" << std::endl;
     }
-    
-    // Espera a que el usuario presione enter para volver al menú
-    cout << "Presione Enter para continuar...";
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    cin.get();
+    std::cout << "\033[35m" << "╚══════════════════════════════════════════════════════════════╝" << "\033[0m" << std::endl;
+    std::cout << "\033[1;34mPresione Enter para continuar...\033[0m";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
 }
 
 vector<pair<string, int>> agregarProducto(){
@@ -151,30 +159,32 @@ vector<pair<string, int>> modificarProducto(){
 
 void mostrarOrdenesMenu(){
 
+    std::cout << "\033[34m" << "╔══════════════════════════════════════════════════════════════╗" << "\033[0m" << std::endl;
+    std::cout << "\033[1;33m" << "                ÓRDENES ACTUALES" << "\033[0m" << std::endl;
+    std::cout << "\033[34m" << "╠══════════════════════════════════════════════════════════════╣" << "\033[0m" << std::endl;
     nlohmann::json json_respuesta = mostrarOrdenes();
     try {
-        
-        if (json_respuesta.contains("ordenes")) { //verifico que el json tenga el campo "ordenes"
-            auto ordenes_json = json_respuesta["ordenes"]; //accedo al array de ordenes dentro del json
-            for (const auto& orden : ordenes_json) { //recorro el array de ordenes y muestro su id, mesa y productos solicitados
-                cout << "Orden ID: " << orden["id"] << endl;
-                cout << "Mesa: " << orden["mesa"] << endl;
-                cout << "Productos:" << endl;
-                for (const auto& producto : orden["productos"].items()) { //recorro el objeto de productos dentro de cada orden y muestro el nombre del producto y la cantidad solicitada
-                    cout << "  - " << producto.key() << ": " << producto.value() << endl;
+        if (json_respuesta.contains("ordenes")) {
+            auto ordenes_json = json_respuesta["ordenes"];
+            for (const auto& orden : ordenes_json) {
+                std::cout << "\033[1;36mOrden ID: \033[0m" << orden["id"] << std::endl;
+                std::cout << "\033[32mMesa: \033[0m" << orden["mesa"] << std::endl;
+                std::cout << "\033[1;33mProductos:\033[0m" << std::endl;
+                for (const auto& producto : orden["productos"].items()) {
+                    std::cout << "  - \033[35m" << producto.key() << "\033[0m: \033[36m" << producto.value() << "\033[0m" << std::endl;
                 }
-                cout << "-----------------------------" << endl;
+                std::cout << "\033[34m" << "──────────────────────────────────────────────────────────────" << "\033[0m" << std::endl;
             }
         } else {
-            cout << "No se encontraron órdenes en la respuesta." << endl;
+            std::cout << "\033[31mNo se encontraron órdenes en la respuesta.\033[0m" << std::endl;
         }
     } catch (const std::exception& e) {
-        cout << "Error al parsear la respuesta JSON: " << e.what() << endl;
+        std::cout << "\033[31mError al parsear la respuesta JSON: " << e.what() << "\033[0m" << std::endl;
     }
-    // Esperar a que el usuario presione enter para volver al menú
-    cout << "Presione Enter para continuar...";
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    cin.get();
+    std::cout << "\033[34m" << "╚══════════════════════════════════════════════════════════════╝" << "\033[0m" << std::endl;
+    std::cout << "\033[1;34mPresione Enter para continuar...\033[0m";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
 }
 
 
@@ -184,7 +194,9 @@ void mostrarCrearOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
     vector<pair<string, int>> lista_productos; //productos que el usuario agregaa a la orden
 
     
-    cout << "\n--- Crear Nueva Orden ---" << endl;
+    std::cout << "\033[35m" << "╔══════════════════════════════════════════════════════════════╗" << "\033[0m" << std::endl;
+    std::cout << "\033[1;33m" << "                CREAR NUEVA ORDEN" << "\033[0m" << std::endl;
+    std::cout << "\033[35m" << "╠══════════════════════════════════════════════════════════════╣" << "\033[0m" << std::endl;
 
     mostrarMesasDisponible(); //muestro las mesas disponibles para que el usuario escoja
 
@@ -201,14 +213,15 @@ void mostrarCrearOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
     lista_productos = agregarProducto();
 
     // Mostrar resumen de la orden
-    cout << "\nOrden creada:\nMesa: " << numero_mesa << endl;
+    std::cout << "\033[36m" << "──────────────────────────────────────────────────────────────" << "\033[0m" << std::endl;
+    std::cout << "\033[1;32mOrden creada:\033[0m\n\033[1;36mMesa: \033[0m" << numero_mesa << std::endl;
     for (const auto& p : lista_productos) {
-        cout << "Producto: " << p.first << " | Cantidad: " << p.second << endl;
+        std::cout << "\033[1;35mProducto: \033[0m" << p.first << " | \033[1;33mCantidad: \033[0m" << p.second << std::endl;
     }
-    // Esperar a que el usuario presione enter para volver al menú
-    cout << "Presione Enter para continuar...";
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    cin.get();
+    std::cout << "\033[36m" << "──────────────────────────────────────────────────────────────" << "\033[0m" << std::endl;
+    std::cout << "\033[1;34mPresione Enter para continuar...\033[0m";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
 
     if(!confirmarAccion()) 
         return;
@@ -224,7 +237,9 @@ void mostrarModificarOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
 
     //muesto las ordenes existentes para que el usuario ingrese el id
     mostrarOrdenesMenu();
-    cout << "\n--- Modificar Orden ---" << endl;
+    std::cout << "\033[36m" << "╔══════════════════════════════════════════════════════════════╗" << "\033[0m" << std::endl;
+    std::cout << "\033[1;33m" << "                MODIFICAR ORDEN" << "\033[0m" << std::endl;
+    std::cout << "\033[36m" << "╠══════════════════════════════════════════════════════════════╣" << "\033[0m" << std::endl;
     
     cout << "Ingrese el ID de la orden a modificar: ";
     while (!(cin >> id_orden) || id_orden <= 0) {
@@ -238,17 +253,18 @@ void mostrarModificarOrdenMenu(PtrElemento& ordenes, PtrElemento& productos){
     lista_productos = modificarProducto(); //pido los productos a modificar o agregar a la orden
 
     // Mostrar resumen de la modificación
-    cout << "\nModificación a aplicar en la orden " << id_orden << ":" << endl;
+    std::cout << "\033[36m" << "──────────────────────────────────────────────────────────────" << "\033[0m" << std::endl;
+    std::cout << "\033[1;32mModificación a aplicar en la orden \033[0m" << id_orden << ":" << std::endl;
     for (const auto& p : lista_productos) {
         if (p.second == 0)
-            cout << "Eliminar producto: " << p.first << endl;
+            std::cout << "\033[31mEliminar producto: \033[0m" << p.first << std::endl;
         else
-            cout << "Producto: " << p.first << " | Nueva cantidad: " << p.second << endl;
+            std::cout << "\033[1;35mProducto: \033[0m" << p.first << " | \033[1;33mNueva cantidad: \033[0m" << p.second << std::endl;
     }
-    // Esperar a que el usuario presione enter para volver al menú
-    cout << "Presione Enter para continuar...";
-    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    cin.get();
+    std::cout << "\033[36m" << "──────────────────────────────────────────────────────────────" << "\033[0m" << std::endl;
+    std::cout << "\033[1;34mPresione Enter para continuar...\033[0m";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
 
     if(!confirmarAccion()) 
         return;
@@ -262,21 +278,25 @@ void mostrarMenu(PtrElemento& ordenes, PtrElemento& productos){
     while (true)
     {
         system("clear");
+        std::cout << "\033[36m" << "╔══════════════════════════════════════════════════════════════╗" << "\033[0m" << std::endl;
+        std::cout << "\033[1;33m" << "              MENÚ PRINCIPAL DEL SISTEMA  " << "\033[0m" << std::endl;
+        std::cout << "\033[36m" << "╠═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═◆═╣" << "\033[0m" << std::endl;
         int option;
-        cout << "1. Ver Ordenes" << endl;
-        cout << "2. Crear Orden" << endl;
-        cout << "3. Modificar Orden" << endl;
-        cout << "4. Salir" << endl;
-        cout << "Ingrese una opcion: ";
-        cin >> option;
+        std::cout << "\033[32m▶ 1.\033[0m Ver \033[1;36mÓrdenes\033[0m" << std::endl;
+        std::cout << "\033[32m▶ 2.\033[0m Crear \033[1;35mOrden\033[0m" << std::endl;
+        std::cout << "\033[32m▶ 3.\033[0m Modificar \033[1;33mOrden\033[0m" << std::endl;
+        std::cout << "\033[31mX 4.\033[0m Salir" << std::endl;
+        std::cout << "\033[36m" << "╚══════════════════════════════════════════════════════════════╝" << "\033[0m" << std::endl;
+        std::cout << "\033[1;34mIngrese una opción: \033[0m";
+        std::cin >> option;
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            cout << "Entrada inválida. Intente de nuevo." << endl;
-            cout << "Presione Enter para continuar...";
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            cin.get();
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "\033[31mEntrada inválida. Intente de nuevo.\033[0m" << std::endl;
+            std::cout << "\033[36mPresione Enter para continuar...\033[0m";
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cin.get();
             continue;
         }
 
@@ -291,15 +311,38 @@ void mostrarMenu(PtrElemento& ordenes, PtrElemento& productos){
                 mostrarModificarOrdenMenu(ordenes, productos);
                 break;
             case 4:
-                cout << "saliendo..." << endl;
+                std::cout << "\033[31mSaliendo...\033[0m" << std::endl;
                 return;
             default:
-                cout << "Opcion invalida" << endl;
-                cout << "Presione Enter para continuar...";
-                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                cin.get();
+                std::cout << "\033[31mOpción inválida\033[0m" << std::endl;
+                std::cout << "\033[36mPresione Enter para continuar...\033[0m";
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cin.get();
                 break;
         }
     }
 }
 
+void pantallaInicial(){
+    system("clear");
+    // Imprimir el ASCII art
+    const char* ruta = "../client/assets/ascii-art.txt";
+    std::ifstream asciiFile("../client/assets/ascii-art.txt");
+    if (asciiFile.is_open()) {
+        std::string line;
+        cout << "\033[1;33m"; 
+        while (std::getline(asciiFile, line)) {
+            std::cout << line << std::endl;
+        }
+        cout << "\033[0m";
+        asciiFile.close();
+    } else {
+        std::cout << "[No se pudo cargar el arte ASCII]" << std::endl;
+    }
+    std::cout << "\033[36m" << "╔══════════════════════════════════════════════════════════════╗" << "\033[0m" << std::endl;
+    std::cout << "\033[1;33m" << "  Bienvenido al sistema de gestión de órdenes del restaurante" << "\033[0m" << std::endl;
+    std::cout << "\033[36m" << "╚══════════════════════════════════════════════════════════════╝" << "\033[0m" << std::endl;
+    std::cout << "\033[1;34mPresione Enter para continuar...\033[0m";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
+}

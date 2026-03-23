@@ -13,6 +13,7 @@ PtrElemento productos = NULL;
 
 
 int main() {
+    pantallaInicial();
     mostrarMenu(ordenes, productos);
     return 0;
 }
