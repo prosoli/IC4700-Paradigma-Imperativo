@@ -1,4 +1,5 @@
 #include <iostream>
+#include "server_menus.h"
 #include "../server/utils/Auxiliares.h"
 #include "../server/productos/productoService.h"
 #include "../server/ordenes/ordenService.h"
@@ -114,12 +115,4 @@ void menuListas(){
                 break;
         }
     }
-}
-
-int main(){
-    menuListas();
-    eliminarLista(ListaProductos);
-    cout<<"Finalizado."<<endl;
-
-    return 0;
 }
