@@ -29,23 +29,16 @@ void conectarServidor(int sock, const char* ip, int puerto) {
     }
 }
 
-void enviarDatos(int sock, const char* mensaje) {
+std::string  enviarDatos(int sock, const char* mensaje) {
     ssize_t bytes = write(sock, mensaje, strlen(mensaje));
     //recibo la respuesta del servidor
     char buffer[1024];
     ssize_t bytesRecibidos = read(sock, buffer, sizeof(buffer));
     if (bytesRecibidos < 0) {
         perror("Error al recibir datos");
+        return "";
     } else {
-        buffer[bytesRecibidos] = '\0'; // Asegura que el buffer esté terminado en null
-        cout << "Respuesta del servidor: " << buffer << endl;
-        //la consola le da espera para que lea el mensaje del servidor antes de cerrar la conexion
-        cout << "Presiona Enter para continuar..." << endl;
-        cin.get(); // Espera a que el usuario presione Enter
-        cin.ignore();
-    }
-    if (bytes < 0) {
-        perror("Error al enviar datos");
+        return std::string(buffer, bytesRecibidos);
     }
 }
 
@@ -74,9 +67,10 @@ void ConexionConFork() {
 }
 
 // Envía una solicitud al servidor y cierra la conexión
-void enviarSolicitudAlServidor(const char* mensaje) {
+std::string enviarSolicitudAlServidor(const char* mensaje) {
     int sock = crearSocket();
     conectarServidor(sock, "127.0.0.1", 8080);
-    enviarDatos(sock, mensaje);
+    std::string respuesta = enviarDatos(sock, mensaje);
     cerrarSocket(sock);
+    return respuesta;
 }
