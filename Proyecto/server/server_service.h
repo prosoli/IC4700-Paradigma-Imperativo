@@ -1,5 +1,10 @@
 #pragma once
 
+#include <nlohmann/json.hpp>
 #include <string>
+#include <utility>
+#include <vector>
 
+bool parseCreateOrder(const nlohmann::json& json_msg, int& mesa, std::vector<std::pair<std::string, int>>& productos, std::string& error);
+nlohmann::json createOrderHandler(const nlohmann::json& json_msg);
 std::string procesarMensajeServidor(const std::string& mensaje);

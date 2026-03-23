@@ -1,10 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 #include "../../models/operacionesstructs.h"
 #include "../../models/elementolista.h"
 
 PtrElemento buscarElemento(PtrElemento& lista, int indice);
+PtrElemento buscarElementoNombre(PtrElemento& lista, const std::string& nombre);
 
 //Operaciones del CRUD
 

@@ -2,15 +2,81 @@
 
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include "../models/messageCode.h"
+#include "ordenes/ordenService.h"
 
 using namespace std;
+
+bool parseCreateOrder(const nlohmann::json& json_msg, int& mesa, std::vector<std::pair<std::string, int>>& productos, std::string& error) {
+	if (!json_msg.contains("Mesa") || !json_msg.contains("Productos")) {    //Verifica que existan los campos de mesa y productos
+		error = "Se requiere Mesa y productos.";
+		return false;
+    }
+	if (!json_msg["Mesa"].is_number_integer() || !json_msg["Productos"].is_array()) {
+		error = "Formato invalido para mesa o productos.";
+		return false;
+	}
+
+	mesa = json_msg["Mesa"].get<int>();
+	const auto& productos_json = json_msg["Productos"];
+	productos.clear();
+
+	for (size_t i = 0; i < productos_json.size(); i++) {
+		const auto& item = productos_json[i];
+		if (!item.is_array() || item.size() != 2 || !item[0].is_string() || !item[1].is_number_integer()) {
+			error = "Formato invalido en la lsita de productos.";
+			return false;
+		}
+		productos.push_back({item[0].get<std::string>(), item[1].get<int>()});
+	}
+
+	error.clear();
+	return true;
+}
+
+
+nlohmann::json createOrderHandler(const nlohmann::json& json_msg) {
+	int mesa = 0;
+	std::vector<std::pair<std::string, int>> productos;
+	std::string error;
+	if (!parseCreateOrder(json_msg, mesa, productos, error)) {
+		return {
+			{"ok", false},
+			{"Type", static_cast<int>(CreateOrder)},
+			{"error", error}
+		};
+	}
+
+	try {
+		PtrOrden ordenCreada = crearOrden(mesa, productos);
+		return {
+			{"ok", true},
+			{"Type", static_cast<int>(CreateOrder)},
+			{"message", "Orden creada correctamente."},
+			{"idOrden", ordenCreada->id},
+			{"mesa", ordenCreada->id_mesa},
+			{"cantidadProductos", ordenCreada->detalles.size()}
+		};
+	} catch (const std::exception& e) {
+		return {
+			{"ok", false},
+			{"Type", static_cast<int>(CreateOrder)},
+			{"error", e.what()}
+		};
+	}
+}
 
 std::string procesarMensajeServidor(const std::string& mensaje) {
 	if (mensaje.empty()) {
 		cout << "No se recibio mensaje o error de lectura." << endl;
-		return "hola recibido";
+		return nlohmann::json({
+			{"ok", false},
+			{"error", "Mensaje vacio."}
+		}).dump();
 	}
 
 	cout << "Mensaje recibido del cliente (raw):" << endl;
@@ -18,58 +84,44 @@ std::string procesarMensajeServidor(const std::string& mensaje) {
 
 	try {
 		nlohmann::json json_msg = nlohmann::json::parse(mensaje);
-		cout << "\nMensaje recibido (JSON parseado):" << endl;
 		for (auto it = json_msg.begin(); it != json_msg.end(); ++it) {
 			cout << it.key() << ": " << it.value() << endl;
 		}
 
-		if (json_msg.contains("Type")) {
-			int type_code = json_msg["Type"].get<int>();
-			MessageCode code = static_cast<MessageCode>(type_code);
-			string comando;
-			switch (code) {
-				case ViewTables: comando = "ViewTables"; break;
-				case CreateOrder: comando = "CreateOrder"; break;
-				case ViewOrders: comando = "ViewOrders"; break;
-				case ModifyOrder: comando = "ModifyOrder"; break;
-				case ViewProducts: comando = "ViewProducts"; break;
-				default: comando = "Desconocido"; break;
-			}
-			cout << "\nComando recibido (Type): " << comando << endl;
+		if (!json_msg.contains("Type") || !json_msg["Type"].is_number_integer()) {
+			return nlohmann::json({
+				{"ok", false},
+				{"error", "El campo Type es requerido y debe ser entero."}
+			}).dump();
+		}
 
-			if (code == ViewOrders) {
-				nlohmann::json ordenes = {
-					{"ordenes", {
-						{{"id", 1}, {"mesa", 5}, {"productos", {{"Pizza", 2}, {"Refresco", 3}}}},
-						{{"id", 2}, {"mesa", 3}, {"productos", {{"Hamburguesa", 1}, {"Papas", 2}}}}
-					}}
-				};
-				return ordenes.dump();
-			}
+		int type_code = json_msg["Type"].get<int>();
+		MessageCode code = static_cast<MessageCode>(type_code);
 
-			if (code == ViewProducts) {
-				nlohmann::json productos = {
-					{"productos", {
-						{{"nombre", "Pizza"}, {"precio", 10.99}},
-						{{"nombre", "Hamburguesa"}, {"precio", 8.99}}
-					}}
-				};
-				return productos.dump();
-			}
-
-			if (code == ViewTables) {
-				nlohmann::json mesas = {
-					{"mesas", {
-						{{"numero", 1}},
-						{{"numero", 2}}
-					}}
-				};
-				return mesas.dump();
-			}
+		switch (code) {
+			case CreateOrder:
+				return createOrderHandler(json_msg).dump();
+			case ViewTables:
+			case ViewOrders:
+			case ModifyOrder:
+			case ViewProducts:
+				return nlohmann::json({
+					{"ok", false},
+					{"Type", type_code},
+					{"error", "En procesoo."}
+				}).dump();
+			default:
+				return nlohmann::json({
+					{"ok", false},
+					{"Type", type_code},
+					{"error", "Codigo Type desconocido."}
+				}).dump();
 		}
 	} catch (const std::exception& e) {
 		cout << "No se pudo parsear el mensaje como JSON: " << e.what() << endl;
+		return nlohmann::json({
+			{"ok", false},
+			{"error", "JSON invalido."}
+		}).dump();
 	}
-
-	return "hola recibido";
 }

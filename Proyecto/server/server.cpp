@@ -2,11 +2,15 @@
 #include <unistd.h>
 #include <string>
 
+#include "../models/elementolista.h"
 #include "server.h"
 #include "server_socket.h"
 #include "server_service.h"
 
 using namespace std;
+
+PtrElemento ListaProductos = NULL;
+PtrElemento ListaOrdenes = NULL;
 
 int main() {
     int serverSocket = crearSocketServidor(8080);

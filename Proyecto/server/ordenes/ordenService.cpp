@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <stdexcept>
 #include "../../models/orden.h"
 #include "ordenService.h"
 #include "../../models/operacionesstructs.h"
@@ -6,52 +8,34 @@
 
 using namespace std;
 
-void* crearOrden(void){
+
+PtrOrden crearOrden(int numeroMesa, const std::vector<std::pair<std::string, int>>& listaProductos){
+    static int contadorOrdenes = 1;
+
     PtrOrden orden = new(Orden);
+    orden->id = contadorOrdenes++;
+    orden->id_mesa = numeroMesa;
+    orden->estado = true; // pendiente
 
-    //Numero de orden
-    static int contador = 1;
-    orden->id = contador++;
-
-    cout<<"Ingrese el numero de mesa:"<<endl;
-    cin>>orden->id_mesa;
-
-    while (true){
-        cout<<"\nProductos disponibles:"<<endl;
-        leerElementos(ListaProductos);  //Muestra los productos disponibles para elegir 
-        cout<<"Ingrese el numero del producto o elija 0 para terminar:"<<endl;
-
-        int indiceProducto = 0;
-        cin>>indiceProducto;
-
-        if (indiceProducto == 0){   //Salir
-            break;
-        }
-
-        PtrElemento elementoProducto = buscarElemento(ListaProductos, indiceProducto);  //Se busca el elemnto
-        if (elementoProducto == NULL){
-            cout<<"Producto no encontrado, intente de nuevo."<<endl;
-            continue;
-        }
-
-        int cantidad = 0;
-        cout<<"Ingrese la cantidad para este producto:"<<endl;
-        cin>>cantidad;
-
-        if (cantidad <= 0){
-            cout<<"Cantidad invalida, intente de nuevo."<<endl;
-            continue;
+    for (size_t i = 0; i < listaProductos.size(); i++) {
+        PtrElemento elementoProducto = buscarElementoNombre(ListaProductos, listaProductos[i].first);
+        if (elementoProducto == NULL) {
+            delete orden;
+            throw std::runtime_error("El producto no está registrado: " + listaProductos[i].first); //Poner try catch en el handler
         }
 
         ProductoEscogido escogido;
         escogido.producto = static_cast<PtrProducto>(elementoProducto->Informacion);
-        escogido.cantidad = cantidad;
+        escogido.cantidad = listaProductos[i].second;
         orden->detalles.push_back(escogido);
     }
 
-    orden->estado = true; //Orden con estadi pendiente al entrar
+    return orden;
+}
 
-    return (void*)orden;
+void* crearOrden(void){
+    //pend
+    return NULL;
 }
 
 void leerOrden(void* informacion){
@@ -80,7 +64,7 @@ void eliminarOrden(void* informacion){
     // pend
 }
 
-
+//ELIMINARRRRR
 //Agrega nueva orden usando el CRUD
 void agregarOrden(){
     insertarElemento(ListaOrdenes, OperacionesOrdenes);

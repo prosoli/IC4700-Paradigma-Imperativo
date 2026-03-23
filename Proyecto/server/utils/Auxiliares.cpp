@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
+#include <cstring>
 #include "../utils/Auxiliares.h"
+#include "../../models/producto.h"
 using namespace std;
 
 PtrElemento buscarElemento(PtrElemento& lista, int indice){
@@ -16,6 +18,18 @@ PtrElemento buscarElemento(PtrElemento& lista, int indice){
         }
     }
     return Actual;
+}
+
+PtrElemento buscarElementoNombre(PtrElemento& lista, const std::string& nombre){
+    PtrElemento actual = lista;
+    while (actual != NULL){
+        PtrProducto producto = static_cast<PtrProducto>(actual->Informacion);
+        if (producto != NULL && std::strcmp(producto->Nombre, nombre.c_str()) == 0){
+            return actual;
+        }
+        actual = actual->Siguiente;
+    }
+    return NULL;
 }
 
 //Operaciones del CRUD
