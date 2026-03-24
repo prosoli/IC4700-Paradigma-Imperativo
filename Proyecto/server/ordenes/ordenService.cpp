@@ -56,11 +56,11 @@ void leerOrden(void* informacion){
     cout<<"Estado de la orden: "<< (orden->estado ? "Pendiente" : "Completada") << endl;
 }
 
-void actualizarOrden(void* informacion){
-    // pend
-}
+// void actualizarOrden(void* informacion){
+//     // pend
+// }
 
-bool marcarOrdenCompletada(int idOrden) {
+bool actualizarOrden(int idOrden) {
     PtrElemento actual = ListaOrdenes;
     while (actual != NULL) {
         PtrOrden orden = static_cast<PtrOrden>(actual->Informacion);
@@ -140,7 +140,7 @@ void modificarOrdenesPendientes() {
             int idOrden;
             cout << "Ingrese el ID de la orden a completar: ";
             cin >> idOrden;
-            bool completada = marcarOrdenCompletada(idOrden);
+            bool completada = actualizarOrden(idOrden);
             if (completada) {
                 cout << "Orden " << idOrden << " marcada como completada." << endl;
             } else {
@@ -155,6 +155,5 @@ OperacionesStructs OperacionesOrdenes = {
     crearOrden,
     leerOrden,
     actualizarOrden,
-    eliminarOrden,
-    marcarOrdenCompletada
+    eliminarOrden
 };
