@@ -25,4 +25,6 @@ void agregarOrden();
 
 bool marcarOrdenCompletada(int idOrden);
 
+void modificarOrdenesPendientes();
+
 extern OperacionesStructs OperacionesOrdenes;
