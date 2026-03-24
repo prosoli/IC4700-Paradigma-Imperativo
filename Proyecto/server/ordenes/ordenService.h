@@ -23,4 +23,6 @@ void mostrarOrdenesPendientes();
 
 void agregarOrden();
 
+bool marcarOrdenCompletada(int idOrden);
+
 extern OperacionesStructs OperacionesOrdenes;
