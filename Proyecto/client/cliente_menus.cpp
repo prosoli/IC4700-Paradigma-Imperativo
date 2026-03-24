@@ -10,6 +10,28 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 
+namespace {
+bool abrirAsciiArt(std::ifstream& asciiFile, std::string& rutaUsada) {
+    const std::string rutas[] = {
+        "../client/assets/ascii-art.txt",
+        "client/assets/ascii-art.txt",
+        "Proyecto/client/assets/ascii-art.txt",
+        "./assets/ascii-art.txt"
+    };
+
+    for (const std::string& ruta : rutas) {
+        asciiFile.open(ruta);
+        if (asciiFile.is_open()) {
+            rutaUsada = ruta;
+            return true;
+        }
+        asciiFile.clear();
+    }
+
+    return false;
+}
+}
+
 
 void mostrarMesasDisponible(){
 
@@ -225,8 +247,24 @@ void mostrarCrearOrdenMenu(){
 
     if(!confirmarAccion()) 
         return;
-    else
-        crearOrden(numero_mesa, lista_productos);
+    else {
+        try {
+            nlohmann::json respuesta = crearOrden(numero_mesa, lista_productos);
+            if (respuesta.contains("ok") && respuesta["ok"].is_boolean() && respuesta["ok"].get<bool>()) {
+                std::string mensaje = respuesta.contains("message") ? respuesta["message"].get<std::string>() : "Orden creada correctamente.";
+                std::cout << "\033[32m" << mensaje << "\033[0m" << std::endl;
+            } else {
+                std::string error = respuesta.contains("error") ? respuesta["error"].get<std::string>() : "No se pudo crear la orden.";
+                std::cout << "\033[31m" << error << "\033[0m" << std::endl;
+            }
+        } catch (const std::exception& e) {
+            std::cout << "\033[31mError procesando la respuesta del servidor: " << e.what() << "\033[0m" << std::endl;
+        }
+
+        std::cout << "\033[1;34mPresione Enter para continuar...\033[0m";
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get();
+    }
 }
 
 
@@ -326,9 +364,11 @@ void mostrarMenu(){
 void pantallaInicial(){
     system("clear");
     //imprime el ascci de inico
-    std::ifstream asciiFile("../client/assets/ascii-art.txt");
-    if (asciiFile.is_open()) {
+    std::ifstream asciiFile;
+    std::string rutaAscii;
+    if (abrirAsciiArt(asciiFile, rutaAscii)) {
         std::string line;
+        std::cout << "[Cargando arte desde: " << rutaAscii << "]" << std::endl;
         cout << "\033[1;33m"; 
         while (std::getline(asciiFile, line)) {
             std::cout << line << std::endl;
@@ -337,6 +377,10 @@ void pantallaInicial(){
         asciiFile.close();
     } else {
         std::cout << "[No se pudo cargar el arte ASCII]" << std::endl;
+        char cwd[1024];
+        if (getcwd(cwd, sizeof(cwd)) != NULL) {
+            std::cout << "Directorio actual: " << cwd << std::endl;
+        }
     }
     std::cout << "\033[36m" << "╔══════════════════════════════════════════════════════════════╗" << "\033[0m" << std::endl;
     std::cout << "\033[1;33m" << "  Bienvenido al sistema de gestión de órdenes del restaurante" << "\033[0m" << std::endl;

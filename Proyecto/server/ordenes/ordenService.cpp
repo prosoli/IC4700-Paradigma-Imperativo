@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <unordered_set>
 #include "../../models/orden.h"
 #include "ordenService.h"
 #include "../../models/operacionesstructs.h"
@@ -8,20 +9,47 @@
 
 using namespace std;
 
+namespace {
+const char* RESET = "\033[0m";
+const char* BOLD = "\033[1m";
+const char* CYAN = "\033[36m";
+const char* GREEN = "\033[32m";
+const char* YELLOW = "\033[33m";
+const char* MAGENTA = "\033[35m";
+const char* BLUE = "\033[34m";
+}
+
 
 PtrOrden crearOrden(int numeroMesa, const std::vector<std::pair<std::string, int>>& listaProductos){
+
     static int contadorOrdenes = 1;
 
     PtrOrden orden = new(Orden);
     orden->id = contadorOrdenes++;
-    orden->id_mesa = numeroMesa;
+    orden->id_mesa = numeroMesa; //*********AQUI HAY QUE VALIDAR QUE LA MESA EXISTA */
     orden->estado = true; // pendiente
 
+    unordered_set<string> productosEnOrden;
+
     for (size_t i = 0; i < listaProductos.size(); i++) {
+        const string nombreOriginal = listaProductos[i].first;
+
+        if (nombreOriginal.empty()) {
+            delete orden;
+            throw std::runtime_error("Hay un producto con nombre vacio en la orden.");
+        }
+
+        if (productosEnOrden.find(nombreOriginal) != productosEnOrden.end()) {
+            delete orden;
+            throw std::runtime_error("Producto repetido en la orden: " + nombreOriginal);
+        }
+
+        productosEnOrden.insert(nombreOriginal);
+
         PtrElemento elementoProducto = buscarElementoNombre(ListaProductos, listaProductos[i].first);
         if (elementoProducto == NULL) {
             delete orden;
-            throw std::runtime_error("El producto no está registrado: " + listaProductos[i].first); //Poner try catch en el handler
+            throw std::runtime_error("El producto no está registrado: " + listaProductos[i].first);
         }
 
         ProductoEscogido escogido;
@@ -29,31 +57,48 @@ PtrOrden crearOrden(int numeroMesa, const std::vector<std::pair<std::string, int
         escogido.cantidad = listaProductos[i].second;
         orden->detalles.push_back(escogido);
     }
-
+    
+    // inserta la orden en ListaOrdenes automáticamente
+    PtrElemento nuevoElemento = new(ElementoLista);
+    nuevoElemento->Informacion = (void*)orden;
+    nuevoElemento->Operaciones = OperacionesOrdenes;
+    nuevoElemento->Siguiente = NULL;
+    
+    if (ListaOrdenes == NULL) {
+        ListaOrdenes = nuevoElemento;
+    } else {
+        PtrElemento actual = ListaOrdenes;
+        while (actual->Siguiente != NULL) {
+            actual = actual->Siguiente;
+        }
+        actual->Siguiente = nuevoElemento;
+    }
+    
     return orden;
 }
 
-void* crearOrden(void){
-    //pend
-    return NULL;
-}
 
 void leerOrden(void* informacion){
     PtrOrden orden = static_cast<PtrOrden>(informacion);
-    cout<<"Numero de orden: "<< orden->id << endl;
-    cout<<"Numero mesa: "<< orden->id_mesa << endl;
+    cout << BLUE << "  ┌─ " << RESET << BOLD << CYAN << "Orden #" << orden->id << RESET << endl;
+    cout << BLUE << "  ├─ " << RESET << GREEN << "Mesa: " << RESET << orden->id_mesa << endl;
+    
     if (orden->detalles.empty()){
-        cout<<"No hay productos en esta orden."<<endl;
+        cout << BLUE << "  ├─ " << RESET << YELLOW << "(sin productos)" << RESET << endl;
     } else {
-        cout<<"Productos solicitados: "<<endl;
+        cout << BLUE << "  ├─ " << RESET << GREEN << "Productos:" << RESET << endl;
         for (size_t i = 0; i < orden->detalles.size(); i++){
             const ProductoEscogido& detalle = orden->detalles[i];
             if (detalle.producto != NULL){
-                cout<<"- "<<detalle.producto->Nombre<< ": "<<detalle.cantidad<<" unidades"<<endl;
+                cout << BLUE << "  │   • " << RESET << MAGENTA << detalle.producto->Nombre << RESET 
+                     << " " << CYAN << "(" << detalle.cantidad << " ud)" << RESET << endl;
             }
         }
     }
-    cout<<"Estado de la orden: "<< (orden->estado ? "Pendiente" : "Completada") << endl;
+    
+    const char* estadoColor = orden->estado ? YELLOW : GREEN;
+    const char* estadoTexto = orden->estado ? "Pendiente" : "Completada";
+    cout << BLUE << "  └─ " << RESET << "Estado: " << estadoColor << BOLD << estadoTexto << RESET << endl;
 }
 
 void actualizarOrden(void* informacion){
@@ -88,18 +133,26 @@ void agregarOrden(){
 //Muestra las órdenes usando el CRUD
 void mostrarOrdenes(){
     cout << endl;
-    cout << "======= Órdenes registradas =======" << endl;
-    leerElementos(ListaOrdenes);
+    cout << CYAN << BOLD << "╔════════════════════════════════════════════╗" << RESET << endl;
+    cout << CYAN << BOLD << "║       ÓRDENES REGISTRADAS EN SISTEMA       ║" << RESET << endl;
+    cout << CYAN << BOLD << "╚════════════════════════════════════════════╝" << RESET << endl;
+    if (ListaOrdenes == NULL) {
+        cout << YELLOW << "  (No hay órdenes registradas)" << RESET << endl;
+    } else {
+        leerElementos(ListaOrdenes);
+    }
     cout << endl;
 }
 
 //Ordnes filtradas
 void mostrarOrdenesPendientes(){
     cout << endl;
-    cout << "======= Órdenes pendientes =======" << endl;
+    cout << CYAN << BOLD << "╔════════════════════════════════════════════╗" << RESET << endl;
+    cout << CYAN << BOLD << "║         ÓRDENES PENDIENTES POR ENTREGAR    ║" << RESET << endl;
+    cout << CYAN << BOLD << "╚════════════════════════════════════════════╝" << RESET << endl;
 
     if (ListaOrdenes == NULL){
-        cout << "No hay elementos que mostrar." << endl;
+        cout << YELLOW << "  (No hay órdenes en el sistema)" << RESET << endl;
         cout << endl;
         return;
     }
@@ -111,7 +164,7 @@ void mostrarOrdenesPendientes(){
     while (actual != NULL){
         PtrOrden orden = static_cast<PtrOrden>(actual->Informacion);
         if (orden != NULL && orden->estado){
-            cout << indice << ". ";
+            cout << "\n";
             leerOrden(actual->Informacion);
             hayPendientes = true;
         }
@@ -120,40 +173,71 @@ void mostrarOrdenesPendientes(){
     }
 
     if (!hayPendientes){
-        cout << "No hay ordenes pendientes." << endl;
+        cout << YELLOW << "  ✓ Todas las órdenes han sido completadas" << RESET << endl;
     }
 
     cout << endl;
 }
 
 void modificarOrdenesPendientes() {
-    // Submenú para modificar ordenes (marcar completada)
     int subOpcion = -1;
     while (subOpcion != 0) {
         cout << endl;
-        cout << "--- Modificar Ordenes ---" << endl;
-        cout << "1. Marcar orden como completada" << endl;
-        cout << "0. Volver" << endl;
-        cout << "Opcion: ";
+        cout << CYAN << BOLD << "╔════════════════════════════════════════════╗" << RESET << endl;
+        cout << CYAN << BOLD << "║       MARCAR ORDEN COMO COMPLETADA         ║" << RESET << endl;
+        cout << CYAN << BOLD << "╠════════════════════════════════════════════╣" << RESET << endl;
+        cout << CYAN << BOLD << "║" << RESET << GREEN << "  [1] Marcar orden como completada         " << RESET << CYAN << BOLD << "║" << RESET << endl;
+        cout << CYAN << BOLD << "║" << RESET << MAGENTA << "  [0] Volver                                 " << RESET << CYAN << BOLD << "║" << RESET << endl;
+        cout << CYAN << BOLD << "╚════════════════════════════════════════════╝" << RESET << endl;
+        cout << BOLD << YELLOW << "Opción: " << RESET;
         cin >> subOpcion;
+        
         if (subOpcion == 1) {
             int idOrden;
             cout << "Ingrese el ID de la orden a completar: ";
             cin >> idOrden;
             bool completada = modificarOrdenesPendientes(idOrden);
             if (completada) {
-                cout << "Orden " << idOrden << " marcada como completada." << endl;
+                cout << GREEN << BOLD << "✓ Orden " << idOrden << " marcada como completada." << RESET << endl;
             } else {
-                cout << "Orden no encontrada." << endl;
+                cout << YELLOW << "✗ Orden " << idOrden << " no encontrada." << RESET << endl;
             }
         }
     }
 }
 
-//Operaciones para trabajar con ordenes
+
+
+
+// Nota: crearOrden(int, vector) arriba es la función correcta para crear órdenes
+// Las siguientes son wrappers para el struct OperacionesOrdenes (CRUD genérico)
+
+void* crearOrdenCRUD(void) {
+    // Para órdenes, la creación requiere datos específicos del cliente (mesa y productos)
+    // Se usa crearOrden(int numeroMesa, vector) en server_service.cpp
+    // Este placeholder es para compatibilidad con el CRUD genérico
+    return nullptr;
+}
+
+void actualizarOrdenCRUD(void* informacion) {
+    PtrOrden orden = static_cast<PtrOrden>(informacion);
+    if (orden != NULL) {
+        cout << "Ingrese el nuevo ID de la mesa: ";
+        cin >> orden->id_mesa;
+    }
+}
+
+void eliminarOrdenCRUD(void* informacion) {
+    PtrOrden orden = static_cast<PtrOrden>(informacion);
+    if (orden != NULL) {
+        delete(orden);
+    }
+}
+
+//Operaciones para trabajar con ordenes en el CRUD
 OperacionesStructs OperacionesOrdenes = {
-    crearOrden,
+    crearOrdenCRUD,
     leerOrden,
-    actualizarOrden,
-    eliminarOrden
+    actualizarOrdenCRUD,
+    eliminarOrdenCRUD
 };

@@ -39,7 +39,7 @@ nlohmann::json mostrarProductos(){
     return json_respuesta;
 }
 
-void crearOrden(int numero_mesa, const std::vector<std::pair<std::string, int>>& lista_productos){
+nlohmann::json crearOrden(int numero_mesa, const std::vector<std::pair<std::string, int>>& lista_productos){
 
     nlohmann::json json_msg = {
         {"Type", static_cast<unsigned char>(MessageCode::CreateOrder)},
@@ -48,9 +48,9 @@ void crearOrden(int numero_mesa, const std::vector<std::pair<std::string, int>>&
     };
 
     std::string mensaje = json_msg.dump();
-    // Envía 'mensaje' por el socket
     // --- Comunicación con el servidor ---
-    enviarSolicitudAlServidor(mensaje.c_str());
+    std::string respuesta = enviarSolicitudAlServidor(mensaje.c_str());
+    return nlohmann::json::parse(respuesta);
 }
 
 

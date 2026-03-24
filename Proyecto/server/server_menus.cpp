@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+#include <limits>
 #include "server_menus.h"
 #include "../server/utils/Auxiliares.h"
 #include "../server/productos/productoService.h"
@@ -7,27 +9,91 @@
 using namespace std;
 
 //--------------------Menú Productos--------------------//
-PtrElemento ListaProductos = NULL;
-PtrElemento ListaOrdenes = NULL;
+
+namespace {
+const char* RESET = "\033[0m";
+const char* BOLD = "\033[1m";
+const char* CYAN = "\033[36m";
+const char* BLUE = "\033[34m";
+const char* GREEN = "\033[32m";
+const char* YELLOW = "\033[33m";
+const char* RED = "\033[31m";
+const char* MAGENTA = "\033[35m";
+
+void limpiarPantalla() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+void mostrarTitulo(const string& titulo) {
+    cout << BOLD << CYAN;
+    cout << "╔══════════════════════════════════════════════════════╗" << endl;
+    cout << "║               PANEL DEL RESTAURANTE                  ║" << endl;
+    cout << "╠══════════════════════════════════════════════════════╣" << endl;
+    cout << "   " << titulo;
+    for (size_t i = titulo.size(); i < 48; i++) {
+        cout << ' ';
+    }
+    cout  << endl << "╚══════════════════════════════════════════════════════╝" << endl;
+    cout << RESET;
+}
+
+void mostrarSeparador() {
+    cout << BLUE << "────────────────────────────────────────────────────────" << RESET << endl;
+}
+
+void imprimirOpcion(const char* color, int numero, const string& texto) {
+    cout << color << "  [" << numero << "] " << RESET << texto << endl;
+}
+
+void limpiarEntradaInvalida() {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+int leerOpcion(const string& etiqueta) {
+    int opcion = -1;
+    while (true) {
+        cout << BOLD << YELLOW << etiqueta << RESET;
+        if (cin >> opcion) {
+            return opcion;
+        }
+
+        limpiarEntradaInvalida();
+        cout << RED << "Entrada invalida. Debe ingresar un numero." << RESET << endl;
+    }
+}
+
+void pausarConsola() {
+    cout << BOLD << YELLOW << "\nPresione Enter para continuar..." << RESET;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+}
+
 
 void menuProductos(){
     int opcion = -1;
     while (opcion != 0){
-        cout<<endl;
-        cout<<"----------- Gestion de Productos -----------"<<endl;
-        cout<<"1. Listar productos."<<endl;
-        cout<<"2. Agregar un producto."<<endl;
-        cout<<"3. Actualizar un producto."<<endl;
-        cout<<"4. Eliminar un producto."<<endl;
-        cout<<"5. Eliminar todos los productos."<<endl;
-        cout<<"0. Volver al menu principal."<<endl<<endl;
-        cout<<"Ingrese el numero de la operación que desea realizar:"<<endl;
-        cin>>opcion;
+        limpiarPantalla();
+        mostrarTitulo("Gestion de Productos");
+        mostrarSeparador();
+        imprimirOpcion(GREEN, 1, "Listar productos");
+        imprimirOpcion(GREEN, 2, "Agregar un producto");
+        imprimirOpcion(GREEN, 3, "Actualizar un producto");
+        imprimirOpcion(GREEN, 4, "Eliminar un producto");
+        imprimirOpcion(GREEN, 5, "Eliminar todos los productos");
+        imprimirOpcion(MAGENTA, 0, "Volver al menu principal");
+        mostrarSeparador();
+        opcion = leerOpcion("Seleccione una opcion: ");
         cout<<endl;
 
         switch (opcion){
             case 1:
-		mostrarProductos();
+                mostrarProductos();
                 leerElementos(ListaProductos);
                 break;
             case 2:
@@ -43,11 +109,15 @@ void menuProductos(){
                 eliminarLista(ListaProductos);
                 break;
             case 0:
-                cout<<"Ha salido del gestionador de productos."<<endl;
+                cout << MAGENTA << "Ha salido del gestionador de productos." << RESET << endl;
                 break;
             default:
-                cout<<"Por favor ingrese una opcion valida."<<endl;
+                cout << RED << "Por favor ingrese una opcion valida." << RESET << endl;
                 break;
+        }
+
+        if (opcion != 0) {
+            pausarConsola();
         }
     }
 }
@@ -56,32 +126,37 @@ void menuOrdenes(){
 
     int opcion = -1;
     while (opcion != 0){
-        cout<<endl;
-        cout<<"----------- Gestion de Ordenes -----------"<<endl;
-        cout<<"1. Visualizar ordenes."<<endl;
-        cout<<"2. Visualizar ordenes pendientes."<<endl;
-        cout<<"3. Modificar Ordenes."<<endl;
-        cout<<"0. Volver al menu principal."<<endl<<endl;
-        cout<<"Ingrese el numero de la operación que desea realizar:"<<endl;
-        cin>>opcion;
+        limpiarPantalla();
+        mostrarTitulo("Gestion de Ordenes");
+        mostrarSeparador();
+        imprimirOpcion(GREEN, 1, "Visualizar ordenes");
+        imprimirOpcion(GREEN, 2, "Visualizar ordenes pendientes");
+        imprimirOpcion(GREEN, 3, "Modificar ordenes");
+        imprimirOpcion(MAGENTA, 0, "Volver al menu principal");
+        mostrarSeparador();
+        opcion = leerOpcion("Seleccione una opcion: ");
         cout<<endl;
 
         switch (opcion){
             case 1:
-		    mostrarOrdenes();
+                mostrarOrdenes();
                 break;
             case 2:
                 mostrarOrdenesPendientes();
                 break;
             case 3:
-                printf("Modificando ordenes - AUN NO\n");
+                cout << YELLOW << "Modificando ordenes - AUN NO" << RESET << endl;
                 break;
             case 0:
-                cout<<"Ha salido del gestionador de ordenes."<<endl;
+                cout << MAGENTA << "Ha salido del gestionador de ordenes." << RESET << endl;
                 break;
             default:
-                cout<<"Por favor ingrese una opcion valida."<<endl;
+                cout << RED << "Por favor ingrese una opcion valida." << RESET << endl;
                 break;
+        }
+
+        if (opcion != 0) {
+            pausarConsola();
         }
     }
     
@@ -90,30 +165,35 @@ void menuOrdenes(){
 void menuMesas() {
     int opcion = -1;
     while (opcion != 0) {
-        cout << endl;
-        cout << "----------- Gestion de Mesas -----------" << endl;
-        cout << "Mesas disponibles actualmente: " << obtenerNumeroMesas() << endl;
-        cout << "1. Modificar numero de mesas" << endl;
-        cout << "0. Volver al menu principal" << endl;
-        cout << "Opcion: ";
-        cin >> opcion;
+        limpiarPantalla();
+        mostrarTitulo("Gestion de Mesas");
+        mostrarSeparador();
+        cout << CYAN << "Mesas disponibles actualmente: " << RESET << obtenerNumeroMesas() << endl;
+        mostrarSeparador();
+        imprimirOpcion(GREEN, 1, "Modificar numero de mesas");
+        imprimirOpcion(MAGENTA, 0, "Volver al menu principal");
+        mostrarSeparador();
+        opcion = leerOpcion("Seleccione una opcion: ");
         cout << endl;
 
         switch (opcion) {
             case 1: {
                 int nuevoNumero;
-                cout << "Ingrese el nuevo numero de mesas: ";
-                cin >> nuevoNumero;
+                nuevoNumero = leerOpcion("Ingrese el nuevo numero de mesas: ");
                 actualizarNumeroMesas(nuevoNumero);
-                cout << "Numero de mesas actualizado a " << obtenerNumeroMesas() << endl;
+                cout << GREEN << "Numero de mesas actualizado a " << obtenerNumeroMesas() << RESET << endl;
                 break;
             }
             case 0:
-                cout << "Saliendo del gestor de mesas." << endl;
+                cout << MAGENTA << "Saliendo del gestor de mesas." << RESET << endl;
                 break;
             default:
-                cout << "Opcion invalida." << endl;
+                cout << RED << "Opcion invalida." << RESET << endl;
                 break;
+        }
+
+        if (opcion != 0) {
+            pausarConsola();
         }
     }
 }
@@ -121,34 +201,38 @@ void menuMesas() {
 void menuListas(){
     int opcion = -1;
     while (opcion != 0){
-        cout<<endl;
-        cout<<"----------- Gestion del Restaurante -----------"<<endl;
-        cout<<"1. Productos."<<endl;
-        cout<<"2. Ordenes."<<endl;
-        cout<<"3. Mesas."<<endl;
-        cout<<"0. Salir."<<endl<<endl;
-        cout<<"Ingrese el número de la lista que desea manejear:"<<endl;
-        cin>>opcion;
+        limpiarPantalla();
+        mostrarTitulo("Gestion del Restaurante");
+        mostrarSeparador();
+        imprimirOpcion(GREEN, 1, "Productos");
+        imprimirOpcion(GREEN, 2, "Ordenes");
+        imprimirOpcion(GREEN, 3, "Mesas");
+        imprimirOpcion(MAGENTA, 0, "Salir");
+        mostrarSeparador();
+        opcion = leerOpcion("Seleccione una opcion: ");
         cout<<endl;
 
         switch (opcion){
             case 1:
-		mostrarProductos();
+                mostrarProductos();
                 menuProductos();
                 break;
             case 2:
                 menuOrdenes();
-                //opcion = 3;
                 break;
             case 3:
-                 menuMesas(); 
-                 break;
+                menuMesas();
+                break;
             case 0:
-                cout<<"Ha salido del gestionador de listas."<<endl;
+                cout << MAGENTA << "Ha salido del gestionador de listas." << RESET << endl;
                 break;
             default:
-                cout<<"Por favor ingrese una opción válida."<<endl;
+                cout << RED << "Por favor ingrese una opcion valida." << RESET << endl;
                 break;
+        }
+
+        if (opcion != 0) {
+            pausarConsola();
         }
     }
 }

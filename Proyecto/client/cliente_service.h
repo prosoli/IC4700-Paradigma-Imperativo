@@ -9,7 +9,7 @@
 using namespace std;
 
 nlohmann::json mostrarOrdenes();
-void crearOrden(int numero_mesa, const std::vector<std::pair<std::string, int>>& lista_productos);
+nlohmann::json crearOrden(int numero_mesa, const std::vector<std::pair<std::string, int>>& lista_productos);
 void modificarOrden(int id_orden, const std::vector<std::pair<std::string, int>>& lista_productos);
 nlohmann::json mostrarProductos();
 nlohmann::json mostrarMesas();

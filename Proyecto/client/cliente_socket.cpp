@@ -30,7 +30,11 @@ void conectarServidor(int sock, const char* ip, int puerto) {
 }
 
 std::string  enviarDatos(int sock, const char* mensaje) {
-    ssize_t bytes = write(sock, mensaje, strlen(mensaje));
+    ssize_t bytesEnviados = write(sock, mensaje, strlen(mensaje));
+    if (bytesEnviados < 0) {
+        perror("Error al enviar datos");
+        return "";
+    }
     //recibo la respuesta del servidor
     char buffer[1024];
     ssize_t bytesRecibidos = read(sock, buffer, sizeof(buffer));
