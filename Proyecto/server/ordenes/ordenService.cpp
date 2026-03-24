@@ -60,6 +60,21 @@ void actualizarOrden(void* informacion){
     // pend
 }
 
+bool marcarOrdenCompletada(int idOrden) {
+    PtrElemento actual = ListaOrdenes;
+    while (actual != NULL) {
+        PtrOrden orden = static_cast<PtrOrden>(actual->Informacion);
+        if (orden != NULL && orden->id == idOrden) {
+            if (orden->estado) {
+                orden->estado = false;  // completada
+            }
+            return true;
+        }
+        actual = actual->Siguiente;
+    }
+    return false;
+}
+
 void eliminarOrden(void* informacion){
     // pend
 }
