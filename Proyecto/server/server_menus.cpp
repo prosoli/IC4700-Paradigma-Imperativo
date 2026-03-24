@@ -3,6 +3,7 @@
 #include "../server/utils/Auxiliares.h"
 #include "../server/productos/productoService.h"
 #include "../server/ordenes/ordenService.h"
+#include "../server/mesa/mesaService.h"
 using namespace std;
 
 //--------------------Menú Productos--------------------//
@@ -86,6 +87,37 @@ void menuOrdenes(){
     
 }
 
+void menuMesas() {
+    int opcion = -1;
+    while (opcion != 0) {
+        cout << endl;
+        cout << "----------- Gestion de Mesas -----------" << endl;
+        cout << "Mesas disponibles actualmente: " << obtenerNumeroMesas() << endl;
+        cout << "1. Modificar numero de mesas" << endl;
+        cout << "0. Volver al menu principal" << endl;
+        cout << "Opcion: ";
+        cin >> opcion;
+        cout << endl;
+
+        switch (opcion) {
+            case 1: {
+                int nuevoNumero;
+                cout << "Ingrese el nuevo numero de mesas: ";
+                cin >> nuevoNumero;
+                actualizarNumeroMesas(nuevoNumero);
+                cout << "Numero de mesas actualizado a " << obtenerNumeroMesas() << endl;
+                break;
+            }
+            case 0:
+                cout << "Saliendo del gestor de mesas." << endl;
+                break;
+            default:
+                cout << "Opcion invalida." << endl;
+                break;
+        }
+    }
+}
+
 void menuListas(){
     int opcion = -1;
     while (opcion != 0){
@@ -93,6 +125,7 @@ void menuListas(){
         cout<<"----------- Gestion del Restaurante -----------"<<endl;
         cout<<"1. Productos."<<endl;
         cout<<"2. Ordenes."<<endl;
+        cout<<"3. Mesas."<<endl;
         cout<<"0. Salir."<<endl<<endl;
         cout<<"Ingrese el número de la lista que desea manejear:"<<endl;
         cin>>opcion;
@@ -107,6 +140,9 @@ void menuListas(){
                 menuOrdenes();
                 //opcion = 3;
                 break;
+            case 3:
+                 menuMesas(); 
+                 break;
             case 0:
                 cout<<"Ha salido del gestionador de listas."<<endl;
                 break;
