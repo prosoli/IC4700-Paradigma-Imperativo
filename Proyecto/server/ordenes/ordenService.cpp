@@ -126,10 +126,35 @@ void mostrarOrdenesPendientes(){
     cout << endl;
 }
 
+void modificarOrdenesPendientes() {
+    // Submenú para modificar ordenes (marcar completada)
+    int subOpcion = -1;
+    while (subOpcion != 0) {
+        cout << endl;
+        cout << "--- Modificar Ordenes ---" << endl;
+        cout << "1. Marcar orden como completada" << endl;
+        cout << "0. Volver" << endl;
+        cout << "Opcion: ";
+        cin >> subOpcion;
+        if (subOpcion == 1) {
+            int idOrden;
+            cout << "Ingrese el ID de la orden a completar: ";
+            cin >> idOrden;
+            bool completada = marcarOrdenCompletada(idOrden);
+            if (completada) {
+                cout << "Orden " << idOrden << " marcada como completada." << endl;
+            } else {
+                cout << "Orden no encontrada." << endl;
+            }
+        }
+    }
+}
+
 //Operaciones para trabajar con ordenes
 OperacionesStructs OperacionesOrdenes = {
     crearOrden,
     leerOrden,
     actualizarOrden,
-    eliminarOrden
+    eliminarOrden,
+    marcarOrdenCompletada
 };
