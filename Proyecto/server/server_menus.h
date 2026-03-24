@@ -7,4 +7,5 @@ extern PtrElemento ListaOrdenes;
 
 void menuProductos();
 void menuOrdenes();
+void menuMesas();
 void menuListas();
