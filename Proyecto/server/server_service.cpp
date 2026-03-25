@@ -72,6 +72,22 @@ nlohmann::json createOrderHandler(const nlohmann::json& json_msg) {
 	}
 }
 
+nlohmann::json viewTablesHandler(const nlohmann::json& json_msg) {
+    // Obtener la lista de IDs de mesas desde el servicio
+    std::vector<int> mesas = obtenerListaMesas();
+    // Construir el arreglo JSON en el formato esperado por el cliente
+    nlohmann::json mesas_array = nlohmann::json::array();
+    for (int id : mesas) {
+        mesas_array.push_back({{"numero", id}});
+    }
+    // Retornar respuesta exitosa
+    return nlohmann::json({
+        {"ok", true},
+        {"Type", json_msg["Type"]},
+        {"mesas", mesas_array}
+    });
+}
+
 std::string procesarMensajeServidor(const std::string& mensaje) {
 	if (mensaje.empty()) {
 		cout << "No se recibio mensaje o error de lectura." << endl;
@@ -103,21 +119,8 @@ std::string procesarMensajeServidor(const std::string& mensaje) {
 		switch (code) {
 			case CreateOrder:
 				return createOrderHandler(json_msg).dump();
-			case ViewTables: {
-					// Obtener la lista de IDs de mesas
-					std::vector<int> mesas = obtenerListaMesas();
-					// Construir el arreglo JSON con los números
-					nlohmann::json mesas_array = nlohmann::json::array();
-					for (int id : mesas) {
-						mesas_array.push_back({{"numero", id}});
-					}
-					// Devolver la respuesta en el formato que espera el cliente
-					return nlohmann::json({
-						{"ok", true},
-						{"Type", type_code},
-						{"mesas", mesas_array}
-					}).dump();
-				};
+			case ViewTables:
+				return viewTablesHandler(json_msg).dump();
 			case ViewOrders:
 			case ModifyOrder:
 			case ViewProducts:
