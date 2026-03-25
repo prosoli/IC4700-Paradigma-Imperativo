@@ -6,6 +6,7 @@
 #include "ordenService.h"
 #include "../../models/operacionesstructs.h"
 #include "../utils/Auxiliares.h"
+#include "mesas/mesaService.h"
 
 using namespace std;
 
@@ -22,11 +23,16 @@ const char* BLUE = "\033[34m";
 
 PtrOrden crearOrden(int numeroMesa, const std::vector<std::pair<std::string, int>>& listaProductos){
 
+    // Validar que la mesa exista antes de crear la orden
+    if (!existeMesa(numeroMesa)) {
+        throw std::runtime_error("La mesa " + std::to_string(numeroMesa) + " no existe.");
+    }
+
     static int contadorOrdenes = 1;
 
     PtrOrden orden = new(Orden);
     orden->id = contadorOrdenes++;
-    orden->id_mesa = numeroMesa; //*********AQUI HAY QUE VALIDAR QUE LA MESA EXISTA */
+    orden->id_mesa = numeroMesa;
     orden->estado = true; // pendiente
 
     unordered_set<string> productosEnOrden;
