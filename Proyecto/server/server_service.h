@@ -18,3 +18,5 @@ nlohmann::json generarListaProductos(PtrElemento lista);
 std::string procesarMensajeServidor(const std::string& mensaje);
 
 nlohmann::json viewOrdersHandler(const nlohmann::json& json_msg);
+
+nlohmann::json modifyOrderHandler(const nlohmann::json& json_msg);
