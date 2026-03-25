@@ -11,16 +11,16 @@ PtrElemento buscarElementoNombre(PtrElemento& lista, const std::string& nombre);
 //Operaciones del CRUD
 
 //Crear (C)
-void insertarElemento(PtrElemento& lista, OperacionesStructs operaciones);
+void insertarElemento(PtrElemento& lista, OperacionesStructs operaciones, void** datos);
 
 //Leer (R)
 void leerElementos(PtrElemento& lista);
 
 //Actualizar (U)
-void actualizarElemento(PtrElemento& lista);
+void actualizarElemento(PtrElemento& elemento, void** datos);
 
 //Eliminar (D)
-void eliminarElemento(PtrElemento& lista);
+void eliminarElemento(PtrElemento& lista, int indiceElemento);
 //
 
 //Función para eliminar una lista por completo

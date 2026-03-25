@@ -10,8 +10,6 @@
 #include "../server/mesas/mesaService.h"
 using namespace std;
 
-//--------------------Menú Productos--------------------//
-
 namespace {
 const char* RESET = "\033[0m";
 const char* BOLD = "\033[1m";
@@ -99,16 +97,67 @@ void menuProductos(){
                 leerElementos(ListaProductos);
                 break;
             case 2:
-                insertarElemento(ListaProductos, OperacionesProductos);
+                cout << YELLOW << "--Agregar un producto--" << RESET <<endl;
+                char Nombre[50];
+                float Precio;
+                
+                cout<<"Ingrese el nombre del producto:"<<endl;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.getline(Nombre, 50);
+
+                bool precioValido = false;
+                while (!precioValido) {
+                    cout << BOLD << YELLOW << "Ingrese el precio del producto: " << RESET;
+                    if (cin >> Precio) {
+                        precioValido = true;
+                    } else {
+                        limpiarEntradaInvalida();
+                        cout << RED << "Entrada invalida. Debe ingresar un numero." << RESET << endl;
+                    }
+                }
+                void* datosProducto[2];
+                datosProducto[0] = (void*)Nombre;
+                datosProducto[1] = (void*)&Precio;
+                insertarElemento(ListaProductos, OperacionesProductos, datosProducto);
                 break;
             case 3:
-                actualizarElemento(ListaProductos);
+                cout << YELLOW << "--Actualizar un producto--" << RESET <<endl;
+                int indiceProducto = leerOpcion("Ingrese el indice del producto a actualizar: ");
+                PtrElemento producto = buscarElemento(ListaProductos, indiceProducto);
+                if (producto == NULL){
+                    cout<<"Elemento no encontrado."<<endl;
+                } else {
+                    char Nombre[50];
+                    float Precio;
+                    
+                    cout<<"Ingrese el nuevo nombre del producto:"<<endl;
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cin.getline(Nombre, 50);
+
+                    bool precioValido = false;
+                    while (!precioValido) {
+                        cout << BOLD << YELLOW << "Ingrese el nuevo precio del producto: " << RESET;
+                        if (cin >> Precio) {
+                            precioValido = true;
+                        } else {
+                            limpiarEntradaInvalida();
+                            cout << RED << "Entrada invalida. Debe ingresar un numero." << RESET << endl;
+                        }
+                    }
+                    void* datosProducto[2];
+                    datosProducto[0] = (void*)Nombre;
+                    datosProducto[1] = (void*)&Precio;
+                    actualizarElemento(producto, datosProducto);
+                }
                 break;
             case 4:
-                eliminarElemento(ListaProductos);
+            cout << YELLOW << "--Eliminar un producto--" << RESET <<endl;
+                int indiceProducto = leerOpcion("Ingrese el indice del producto a eliminar: ");
+                eliminarElemento(ListaProductos, indiceProducto);
                 break;
             case 5:
                 eliminarLista(ListaProductos);
+                cout << YELLOW << "--Lista eliminada--" << RESET <<endl;
                 break;
             case 0:
                 cout << MAGENTA << "Ha salido del gestionador de productos." << RESET << endl;
@@ -221,7 +270,6 @@ void menuListas(){
 
         switch (opcion){
             case 1:
-                mostrarProductos();
                 menuProductos();
                 break;
             case 2:

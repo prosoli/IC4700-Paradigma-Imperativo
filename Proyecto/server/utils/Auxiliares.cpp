@@ -35,11 +35,11 @@ PtrElemento buscarElementoNombre(PtrElemento& lista, const std::string& nombre){
 //Operaciones del CRUD
 
 //Crear (C)
-void insertarElemento(PtrElemento& lista, OperacionesStructs operaciones){
+void insertarElemento(PtrElemento& lista, OperacionesStructs operaciones, void** datos){
     //Crear elemento
     PtrElemento elemento = new(ElementoLista);
     elemento->Operaciones = operaciones;
-    elemento->Informacion = operaciones.creacion();
+    elemento->Informacion = operaciones.creacion(datos);
     //Insertar elemento en la lista
     PtrElemento Auxiliar = lista;
     if (Auxiliar != NULL)
@@ -74,25 +74,15 @@ void leerElementos(PtrElemento& lista){
 }
 
 //Actualizar (U)
-void actualizarElemento(PtrElemento& lista){
-    int indiceElemento = 0;
-    cout<<"Ingrese el número del elemento a actualizar:"<<endl;
-    cin>>indiceElemento;
-    PtrElemento elemento = buscarElemento(lista, indiceElemento);
-    if (elemento == NULL){
-        cout<<"Elemento no encontrado."<<endl;
-    } else {
-        elemento->Operaciones.actualizacion(elemento->Informacion);
-    }
+void actualizarElemento(PtrElemento& elemento, void** datos){
+    elemento->Operaciones.actualizacion(elemento->Informacion, datos);
 }
 
 //Eliminar (D)
-void eliminarElemento(PtrElemento& lista){
+void eliminarElemento(PtrElemento& lista, int indiceElemento){
     PtrElemento elemento = NULL;
     PtrElemento elementoAnterior = NULL;
-    int indiceElemento = 0;
-    cout<<"Ingrese el número del elemento a eliminar:"<<endl;
-    cin>>indiceElemento;
+    
     if (indiceElemento != 1){
         elementoAnterior = buscarElemento(lista, (indiceElemento - 1));
         if  (elementoAnterior != NULL){
