@@ -20,6 +20,16 @@ const char* MAGENTA = "\033[35m";
 const char* BLUE = "\033[34m";
 }
 
+PtrOrden buscarOrdenPorId(int id) {
+    PtrElemento actual = ListaOrdenes;
+    while (actual != nullptr) {
+        PtrOrden orden = static_cast<PtrOrden>(actual->Informacion);
+        if (orden->id == id) return orden;
+        actual = actual->Siguiente;
+    }
+    return nullptr;
+}
+
 
 PtrOrden crearOrden(int numeroMesa, const std::vector<std::pair<std::string, int>>& listaProductos){
 
