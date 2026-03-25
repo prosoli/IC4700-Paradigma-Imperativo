@@ -236,6 +236,7 @@ std::string procesarMensajeServidor(const std::string& mensaje) {
 			case ViewOrders:
 				return viewOrdersHandler(json_msg).dump();
 			case ModifyOrder:
+				return modifyOrderHandler(json_msg).dump();
 			case ViewProducts:
 				return generarListaProductos(ListaProductos).dump();
 			default:
