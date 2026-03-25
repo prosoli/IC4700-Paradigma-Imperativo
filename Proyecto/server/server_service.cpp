@@ -111,6 +111,46 @@ nlohmann::json viewTablesHandler(const nlohmann::json& json_msg) {
     });
 }
 
+nlohmann::json viewOrdersHandler(const nlohmann::json& json_msg) {
+	nlohmann::json ordenes_json = nlohmann::json::array();
+	PtrElemento actual = ListaOrdenes;
+
+	while (actual != NULL) {
+		PtrOrden orden = static_cast<PtrOrden>(actual->Informacion);
+		if (orden != NULL) {
+			nlohmann::json productos_json = nlohmann::json::object();
+			for (size_t i = 0; i < orden->detalles.size(); i++) {
+				const ProductoEscogido& detalle = orden->detalles[i];
+				if (detalle.producto == NULL) {
+					continue;
+				}
+
+				std::string nombre = detalle.producto->Nombre;
+				if (!productos_json.contains(nombre)) {
+					productos_json[nombre] = 0;
+				}
+				productos_json[nombre] = productos_json[nombre].get<int>() + detalle.cantidad;
+			}
+
+			ordenes_json.push_back({
+				{"id", orden->id},
+				{"mesa", orden->id_mesa},
+				{"estado", orden->estado ? "Pendiente" : "Completada"},
+				{"productos", productos_json}
+			});
+		}
+
+		actual = actual->Siguiente;
+	}
+
+	return nlohmann::json({
+		{"ok", true},
+		{"Type", json_msg["Type"]},
+		{"ordenes", ordenes_json}
+	});
+}
+
+
 std::string procesarMensajeServidor(const std::string& mensaje) {
 	if (mensaje.empty()) {
 		cout << "No se recibio mensaje o error de lectura." << endl;
@@ -145,6 +185,7 @@ std::string procesarMensajeServidor(const std::string& mensaje) {
 			case ViewTables:
 				return viewTablesHandler(json_msg).dump();
 			case ViewOrders:
+				return viewOrdersHandler(json_msg).dump();
 			case ModifyOrder:
 			case ViewProducts:
 				return generarListaProductos(ListaProductos).dump();
