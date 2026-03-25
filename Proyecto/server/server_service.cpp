@@ -150,6 +150,55 @@ nlohmann::json viewOrdersHandler(const nlohmann::json& json_msg) {
 	});
 }
 
+nlohmann::json modifyOrderHandler(const nlohmann::json& json_msg) {
+    // Validar campos
+    if (!json_msg.contains("IdOrden") || !json_msg.contains("Productos")) {
+        return {
+            {"ok", false},
+            {"Type", json_msg["Type"]},
+            {"error", "Se requiere IdOrden y Productos."}
+        };
+    }
+    if (!json_msg["IdOrden"].is_number_integer() || !json_msg["Productos"].is_array()) {
+        return {
+            {"ok", false},
+            {"Type", json_msg["Type"]},
+            {"error", "Formato inválido para IdOrden o Productos."}
+        };
+    }
+
+    int idOrden = json_msg["IdOrden"].get<int>();
+    const auto& productos_json = json_msg["Productos"];
+    std::vector<std::pair<std::string, int>> productos;
+
+    // Parsear productos
+    for (const auto& item : productos_json) {
+        if (!item.is_array() || item.size() != 2 || !item[0].is_string() || !item[1].is_number_integer()) {
+            return {
+                {"ok", false},
+                {"Type", json_msg["Type"]},
+                {"error", "Formato inválido en la lista de productos. Se espera [\"nombre\", cantidad]."}
+            };
+        }
+        productos.push_back({item[0].get<std::string>(), item[1].get<int>()});
+    }
+
+    try {
+        modificarOrden(idOrden, productos);
+        return {
+            {"ok", true},
+            {"Type", json_msg["Type"]},
+            {"message", "Orden modificada correctamente."},
+            {"idOrden", idOrden}
+        };
+    } catch (const std::exception& e) {
+        return {
+            {"ok", false},
+            {"Type", json_msg["Type"]},
+            {"error", e.what()}
+        };
+    }
+}
 
 std::string procesarMensajeServidor(const std::string& mensaje) {
 	if (mensaje.empty()) {
