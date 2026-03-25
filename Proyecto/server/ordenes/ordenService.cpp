@@ -105,7 +105,7 @@ void actualizarOrden(void* informacion){
     // pend
 }
 
-bool modificarOrdenesPendientes(int idOrden) {
+bool marcarOrdenCompletada(int idOrden) {
     PtrElemento actual = ListaOrdenes;
     while (actual != NULL) {
         PtrOrden orden = static_cast<PtrOrden>(actual->Informacion);
@@ -196,7 +196,7 @@ void modificarOrdenesPendientes() {
             int idOrden;
             cout << "Ingrese el ID de la orden a completar: ";
             cin >> idOrden;
-            bool completada = modificarOrdenesPendientes(idOrden);
+            bool completada = marcarOrdenCompletada(idOrden);
             if (completada) {
                 cout << GREEN << BOLD << "✓ Orden " << idOrden << " marcada como completada." << RESET << endl;
             } else {
