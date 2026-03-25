@@ -4,6 +4,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "../models/elementolista.h"
 
 bool parseCreateOrder(const nlohmann::json& json_msg, int& mesa, std::vector<std::pair<std::string, int>>& productos, std::string& error);
 

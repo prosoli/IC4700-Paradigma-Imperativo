@@ -133,7 +133,7 @@ void eliminarOrden(void* informacion){
 //ELIMINARRRRR
 //Agrega nueva orden usando el CRUD
 void agregarOrden(){
-    insertarElemento(ListaOrdenes, OperacionesOrdenes);
+    cout << YELLOW << "Use CreateOrder desde el cliente para agregar ordenes." << RESET << endl;
 }
 
 //Muestra las órdenes usando el CRUD
@@ -218,14 +218,16 @@ void modificarOrdenesPendientes() {
 // Nota: crearOrden(int, vector) arriba es la función correcta para crear órdenes
 // Las siguientes son wrappers para el struct OperacionesOrdenes (CRUD genérico)
 
-void* crearOrdenCRUD(void) {
+void* crearOrdenCRUD(void** datos) {
     // Para órdenes, la creación requiere datos específicos del cliente (mesa y productos)
     // Se usa crearOrden(int numeroMesa, vector) en server_service.cpp
     // Este placeholder es para compatibilidad con el CRUD genérico
+    (void)datos;
     return nullptr;
 }
 
-void actualizarOrdenCRUD(void* informacion) {
+void actualizarOrdenCRUD(void* informacion, void** datos) {
+    (void)datos;
     PtrOrden orden = static_cast<PtrOrden>(informacion);
     if (orden != NULL) {
         cout << "Ingrese el nuevo ID de la mesa: ";

@@ -92,15 +92,16 @@ void menuProductos(){
         cout<<endl;
 
         switch (opcion){
-            case 1:
+            case 1: {
                 mostrarProductos();
                 leerElementos(ListaProductos);
                 break;
-            case 2:
+            }
+            case 2: {
                 cout << YELLOW << "--Agregar un producto--" << RESET <<endl;
                 char Nombre[50];
                 float Precio;
-                
+
                 cout<<"Ingrese el nombre del producto:"<<endl;
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cin.getline(Nombre, 50);
@@ -120,7 +121,8 @@ void menuProductos(){
                 datosProducto[1] = (void*)&Precio;
                 insertarElemento(ListaProductos, OperacionesProductos, datosProducto);
                 break;
-            case 3:
+            }
+            case 3: {
                 cout << YELLOW << "--Actualizar un producto--" << RESET <<endl;
                 int indiceProducto = leerOpcion("Ingrese el indice del producto a actualizar: ");
                 PtrElemento producto = buscarElemento(ListaProductos, indiceProducto);
@@ -129,7 +131,7 @@ void menuProductos(){
                 } else {
                     char Nombre[50];
                     float Precio;
-                    
+
                     cout<<"Ingrese el nuevo nombre del producto:"<<endl;
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     cin.getline(Nombre, 50);
@@ -150,21 +152,26 @@ void menuProductos(){
                     actualizarElemento(producto, datosProducto);
                 }
                 break;
-            case 4:
-            cout << YELLOW << "--Eliminar un producto--" << RESET <<endl;
+            }
+            case 4: {
+                cout << YELLOW << "--Eliminar un producto--" << RESET <<endl;
                 int indiceProducto = leerOpcion("Ingrese el indice del producto a eliminar: ");
                 eliminarElemento(ListaProductos, indiceProducto);
                 break;
-            case 5:
+            }
+            case 5: {
                 eliminarLista(ListaProductos);
                 cout << YELLOW << "--Lista eliminada--" << RESET <<endl;
                 break;
-            case 0:
+            }
+            case 0: {
                 cout << MAGENTA << "Ha salido del gestionador de productos." << RESET << endl;
                 break;
-            default:
+            }
+            default: {
                 cout << RED << "Por favor ingrese una opcion valida." << RESET << endl;
                 break;
+            }
         }
 
         if (opcion != 0) {
@@ -173,45 +180,7 @@ void menuProductos(){
     }
 }
 
-void menuOrdenes(){
 
-    int opcion = -1;
-    while (opcion != 0){
-        limpiarPantalla();
-        mostrarTitulo("Gestion de Ordenes");
-        mostrarSeparador();
-        imprimirOpcion(GREEN, 1, "Visualizar ordenes");
-        imprimirOpcion(GREEN, 2, "Visualizar ordenes pendientes");
-        imprimirOpcion(GREEN, 3, "Modificar ordenes");
-        imprimirOpcion(MAGENTA, 0, "Volver al menu principal");
-        mostrarSeparador();
-        opcion = leerOpcion("Seleccione una opcion: ");
-        cout<<endl;
-
-        switch (opcion){
-            case 1:
-                mostrarOrdenes();
-                break;
-            case 2:
-                mostrarOrdenesPendientes();
-                break;
-            case 3:
-                cout << YELLOW << "Modificando ordenes - AUN NO" << RESET << endl;
-                break;
-            case 0:
-                cout << MAGENTA << "Ha salido del gestionador de ordenes." << RESET << endl;
-                break;
-            default:
-                cout << RED << "Por favor ingrese una opcion valida." << RESET << endl;
-                break;
-        }
-
-        if (opcion != 0) {
-            pausarConsola();
-        }
-    }
-    
-}
 
 void menuOrdenes(){
 
