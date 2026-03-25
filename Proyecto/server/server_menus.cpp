@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <limits>
+#include <vector>
+#include <sstream>
 #include "server_menus.h"
 #include "../server/utils/Auxiliares.h"
 #include "../server/productos/productoService.h"
@@ -211,33 +213,36 @@ void menuOrdenes(){
     
 }
 
-void menuMesas() {
+void menuOrdenes(){
+
     int opcion = -1;
-    while (opcion != 0) {
+    while (opcion != 0){
         limpiarPantalla();
-        mostrarTitulo("Gestion de Mesas");
+        mostrarTitulo("Gestion de Ordenes");
         mostrarSeparador();
-        cout << CYAN << "Mesas disponibles actualmente: " << RESET << obtenerNumeroMesas() << endl;
-        mostrarSeparador();
-        imprimirOpcion(GREEN, 1, "Modificar numero de mesas");
+        imprimirOpcion(GREEN, 1, "Visualizar ordenes");
+        imprimirOpcion(GREEN, 2, "Visualizar ordenes pendientes");
+        imprimirOpcion(GREEN, 3, "Modificar ordenes");
         imprimirOpcion(MAGENTA, 0, "Volver al menu principal");
         mostrarSeparador();
         opcion = leerOpcion("Seleccione una opcion: ");
-        cout << endl;
+        cout<<endl;
 
-        switch (opcion) {
-            case 1: {
-                int nuevoNumero;
-                nuevoNumero = leerOpcion("Ingrese el nuevo numero de mesas: ");
-                actualizarNumeroMesas(nuevoNumero);
-                cout << GREEN << "Numero de mesas actualizado a " << obtenerNumeroMesas() << RESET << endl;
+        switch (opcion){
+            case 1:
+                mostrarOrdenes();
                 break;
-            }
+            case 2:
+                mostrarOrdenesPendientes();
+                break;
+            case 3:
+                cout << YELLOW << "Modificando ordenes - AUN NO" << RESET << endl;
+                break;
             case 0:
-                cout << MAGENTA << "Saliendo del gestor de mesas." << RESET << endl;
+                cout << MAGENTA << "Ha salido del gestionador de ordenes." << RESET << endl;
                 break;
             default:
-                cout << RED << "Opcion invalida." << RESET << endl;
+                cout << RED << "Por favor ingrese una opcion valida." << RESET << endl;
                 break;
         }
 
@@ -245,7 +250,9 @@ void menuMesas() {
             pausarConsola();
         }
     }
+    
 }
+
 
 void menuListas(){
     int opcion = -1;

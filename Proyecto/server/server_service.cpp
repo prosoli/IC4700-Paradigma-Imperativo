@@ -9,6 +9,7 @@
 #include "../models/messageCode.h"
 #include "ordenes/ordenService.h"
 #include "server_menus.h" //Para que se pueda acceder a la lista de productos
+#include "mesas/mesaService.h"
 
 
 using namespace std;
@@ -94,6 +95,22 @@ nlohmann::json generarListaProductos(PtrElemento lista){
 }
 //
 
+nlohmann::json viewTablesHandler(const nlohmann::json& json_msg) {
+    // Obtener la lista de IDs de mesas desde el servicio
+    std::vector<int> mesas = obtenerListaMesas();
+    // Construir el arreglo JSON en el formato esperado por el cliente
+    nlohmann::json mesas_array = nlohmann::json::array();
+    for (int id : mesas) {
+        mesas_array.push_back({{"numero", id}});
+    }
+    // Retornar respuesta exitosa
+    return nlohmann::json({
+        {"ok", true},
+        {"Type", json_msg["Type"]},
+        {"mesas", mesas_array}
+    });
+}
+
 std::string procesarMensajeServidor(const std::string& mensaje) {
 	if (mensaje.empty()) {
 		cout << "No se recibio mensaje o error de lectura." << endl;
@@ -126,6 +143,7 @@ std::string procesarMensajeServidor(const std::string& mensaje) {
 			case CreateOrder:
 				return createOrderHandler(json_msg).dump();
 			case ViewTables:
+				return viewTablesHandler(json_msg).dump();
 			case ViewOrders:
 			case ModifyOrder:
 			case ViewProducts:
