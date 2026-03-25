@@ -121,6 +121,77 @@ void actualizarOrden(void* informacion){
     // pend
 }
 
+void modificarOrden(int idOrden, const std::vector<std::pair<std::string, int>>& productosDelta) {
+    // 1. Buscar la orden
+    PtrOrden orden = buscarOrdenPorId(idOrden);
+    // PtrOrden orden = buscarElemento(ListaOrdenes, idOrden);
+    if (orden == nullptr) {
+        throw std::runtime_error("No existe la orden con ID " + std::to_string(idOrden));
+    }
+
+    // 2. Validar los productos mencionados en la solicitud
+    std::unordered_set<std::string> productosEnDelta;
+    for (const auto& par : productosDelta) {
+        const std::string& nombre = par.first;
+        if (nombre.empty()) {
+            throw std::runtime_error("Nombre de producto vacío en la solicitud.");
+        }
+        if (productosEnDelta.find(nombre) != productosEnDelta.end()) {
+            throw std::runtime_error("Producto duplicado en la solicitud: " + nombre);
+        }
+        productosEnDelta.insert(nombre);
+
+        // Verificar que exista en el catálogo
+        if (buscarElementoNombre(ListaProductos, nombre) == nullptr) {
+            throw std::runtime_error("El producto '" + nombre + "' no está registrado.");
+        }
+    }
+
+    // 3. Construir un mapa de productos actuales (nombre -> índice en el vector)
+    std::unordered_map<std::string, size_t> indiceActual;
+    for (size_t i = 0; i < orden->detalles.size(); ++i) {
+        if (orden->detalles[i].producto != nullptr) {
+            indiceActual[orden->detalles[i].producto->Nombre] = i;
+        }
+    }
+
+    // 4. Procesar cada producto delta
+    for (const auto& par : productosDelta) {
+        const std::string& nombre = par.first;
+        int cantidad = par.second;
+        auto it = indiceActual.find(nombre);
+        if (cantidad == 0) {
+            // Eliminar si existe
+            if (it != indiceActual.end()) {
+                orden->detalles[it->second].cantidad = 0;  // marcar para eliminar
+            }
+        } else {
+            // cantidad > 0: agregar o actualizar
+            if (it != indiceActual.end()) {
+                // Actualizar existente
+                orden->detalles[it->second].cantidad = cantidad;
+            } else {
+                // Agregar nuevo producto
+                PtrElemento elem = buscarElementoNombre(ListaProductos, nombre);
+                PtrProducto prod = static_cast<PtrProducto>(elem->Informacion);
+                ProductoEscogido nuevo;
+                nuevo.producto = prod;
+                nuevo.cantidad = cantidad;
+                orden->detalles.push_back(nuevo);
+            }
+        }
+    }
+
+    // 5. Eliminar todos los productos con cantidad 0
+    std::vector<ProductoEscogido> nuevosDetalles;
+    for (auto& detalle : orden->detalles) {
+        if (detalle.cantidad > 0) {
+            nuevosDetalles.push_back(detalle);
+        }
+    }
+    orden->detalles = nuevosDetalles;
+}
+
 bool marcarOrdenCompletada(int idOrden) {
     PtrElemento actual = ListaOrdenes;
     while (actual != NULL) {
