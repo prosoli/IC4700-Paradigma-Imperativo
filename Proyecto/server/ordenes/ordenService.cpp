@@ -6,7 +6,7 @@
 #include "ordenService.h"
 #include "../../models/operacionesstructs.h"
 #include "../utils/Auxiliares.h"
-#include "mesas/mesaService.h"
+#include "../mesas/mesaService.h"
 
 using namespace std;
 
