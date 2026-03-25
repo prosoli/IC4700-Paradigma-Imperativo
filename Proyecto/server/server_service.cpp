@@ -8,6 +8,7 @@
 
 #include "../models/messageCode.h"
 #include "ordenes/ordenService.h"
+#include "mesas/mesaService.h"
 
 
 using namespace std;
@@ -102,7 +103,21 @@ std::string procesarMensajeServidor(const std::string& mensaje) {
 		switch (code) {
 			case CreateOrder:
 				return createOrderHandler(json_msg).dump();
-			case ViewTables:
+			case ViewTables: {
+					// Obtener la lista de IDs de mesas
+					std::vector<int> mesas = obtenerListaMesas();
+					// Construir el arreglo JSON con los números
+					nlohmann::json mesas_array = nlohmann::json::array();
+					for (int id : mesas) {
+						mesas_array.push_back({{"numero", id}});
+					}
+					// Devolver la respuesta en el formato que espera el cliente
+					return nlohmann::json({
+						{"ok", true},
+						{"Type", type_code},
+						{"mesas", mesas_array}
+					}).dump();
+				};
 			case ViewOrders:
 			case ModifyOrder:
 			case ViewProducts:
