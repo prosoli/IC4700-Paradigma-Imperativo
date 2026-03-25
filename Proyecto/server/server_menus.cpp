@@ -205,7 +205,7 @@ void menuOrdenes(){
                 mostrarOrdenesPendientes();
                 break;
             case 3:
-                cout << YELLOW << "Modificando ordenes - AUN NO" << RESET << endl;
+                modificarOrdenesPendientes();
                 break;
             case 0:
                 cout << MAGENTA << "Ha salido del gestionador de ordenes." << RESET << endl;
