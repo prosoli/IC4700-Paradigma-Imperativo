@@ -8,6 +8,7 @@
 
 #include "../models/messageCode.h"
 #include "ordenes/ordenService.h"
+#include "server_menus.h" //Para que se pueda acceder a la lista de productos
 
 
 using namespace std;
@@ -71,6 +72,28 @@ nlohmann::json createOrderHandler(const nlohmann::json& json_msg) {
 	}
 }
 
+//Productos
+nlohmann::json productoAJson(void* informacion){
+	PtrProducto producto = static_cast<PtrProducto>(informacion);
+	nlohmann::json productoJSON;
+	productoJSON["nombre"] = producto->Nombre;
+	productoJSON["precio"] = producto->Precio;
+	return productoJSON;
+}
+
+nlohmann::json generarListaProductos(PtrElemento lista){
+	nlohmann::json arregloJSON = nlohmann::json::array();
+	PtrElemento actual = lista;
+	while (actual != NULL){
+		arregloJSON.push_back(productoAJson(actual->Informacion));
+		actual = actual->Siguiente;
+	}
+	nlohmann::json listaJSON;
+	listaJSON["productos"] = arregloJSON;
+	return listaJSON;
+}
+//
+
 std::string procesarMensajeServidor(const std::string& mensaje) {
 	if (mensaje.empty()) {
 		cout << "No se recibio mensaje o error de lectura." << endl;
@@ -106,11 +129,7 @@ std::string procesarMensajeServidor(const std::string& mensaje) {
 			case ViewOrders:
 			case ModifyOrder:
 			case ViewProducts:
-				return nlohmann::json({
-					{"ok", false},
-					{"Type", type_code},
-					{"error", "En procesoo."}
-				}).dump();
+				return generarListaProductos(ListaProductos).dump();
 			default:
 				return nlohmann::json({
 					{"ok", false},
