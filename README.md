@@ -1,4 +1,4 @@
-# IC4700 - I Proyecto - Paradiga Imperativo  
+# IC4700 - I Proyecto - Paradigma Imperativo  
 
 **Curso:** Lenguajes de Programación  
 **Semestre:** Primer Semestre 2026  
