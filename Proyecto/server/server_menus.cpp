@@ -222,6 +222,74 @@ void menuOrdenes(){
     
 }
 
+void menuMesas() {
+    int opcion = -1;
+    while (opcion != 0) {
+        limpiarPantalla();
+        mostrarTitulo("Gestion de Mesas");
+        mostrarSeparador();
+        auto lista = obtenerListaMesas();
+        cout << CYAN << "Mesas actuales: [";
+        for (size_t i = 0; i < lista.size(); ++i) {
+            cout << lista[i];
+            if (i != lista.size() - 1) cout << ", ";
+        }
+        cout << "]" << RESET << endl;
+        mostrarSeparador();
+        imprimirOpcion(GREEN, 1, "Agregar una mesa (por ID)");
+        imprimirOpcion(GREEN, 2, "Eliminar una mesa (por ID)");
+        imprimirOpcion(GREEN, 3, "Establecer lista completa de mesas");
+        imprimirOpcion(MAGENTA, 0, "Volver al menu principal");
+        mostrarSeparador();
+        opcion = leerOpcion("Seleccione una opcion: ");
+        cout << endl;
+
+        switch (opcion) {
+            case 1: {
+                int id = leerOpcion("Ingrese el ID de la nueva mesa: ");
+                agregarMesa(id);
+                cout << GREEN << "Mesa " << id << " agregada." << RESET << endl;
+                break;
+            }
+            case 2: {
+                int id = leerOpcion("Ingrese el ID de la mesa a eliminar: ");
+                if (existeMesa(id)) {
+                    eliminarMesa(id);
+                    cout << GREEN << "Mesa " << id << " eliminada." << RESET << endl;
+                } else {
+                    cout << RED << "La mesa " << id << " no existe." << RESET << endl;
+                }
+                break;
+            }
+            case 3: {
+                cout << "Ingrese los IDs separados por espacios (ejemplo: 1 3 5 8): ";
+                string linea;
+                cin.ignore();  // limpiar buffer
+                getline(cin, linea);
+                istringstream iss(linea);
+                vector<int> nuevaLista;
+                int id;
+                while (iss >> id) {
+                    nuevaLista.push_back(id);
+                }
+                actualizarListaMesas(nuevaLista);
+                cout << GREEN << "Lista de mesas actualizada." << RESET << endl;
+                break;
+            }
+            case 0:
+                cout << MAGENTA << "Saliendo del gestor de mesas." << RESET << endl;
+                break;
+            default:
+                cout << RED << "Opcion invalida." << RESET << endl;
+                break;
+        }
+
+        if (opcion != 0) {
+            pausarConsola();
+        }
+    }
+}
+
 
 void menuListas(){
     int opcion = -1;
@@ -245,7 +313,7 @@ void menuListas(){
                 menuOrdenes();
                 break;
             case 3:
-                //menuMesas();
+                menuMesas();
                 break;
             case 0:
                 cout << MAGENTA << "Ha salido del gestionador de listas." << RESET << endl;
