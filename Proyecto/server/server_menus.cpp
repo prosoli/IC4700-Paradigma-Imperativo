@@ -245,7 +245,7 @@ void menuListas(){
                 menuOrdenes();
                 break;
             case 3:
-                menuMesas();
+                //menuMesas();
                 break;
             case 0:
                 cout << MAGENTA << "Ha salido del gestionador de listas." << RESET << endl;
