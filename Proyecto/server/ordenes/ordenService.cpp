@@ -6,6 +6,7 @@
 #include "ordenService.h"
 #include "../../models/operacionesstructs.h"
 #include "../utils/Auxiliares.h"
+#include "../mesas/mesaService.h"
 
 using namespace std;
 
@@ -22,11 +23,16 @@ const char* BLUE = "\033[34m";
 
 PtrOrden crearOrden(int numeroMesa, const std::vector<std::pair<std::string, int>>& listaProductos){
 
+    // Validar que la mesa exista antes de crear la orden
+    if (!existeMesa(numeroMesa)) {
+        throw std::runtime_error("La mesa " + std::to_string(numeroMesa) + " no existe.");
+    }
+
     static int contadorOrdenes = 1;
 
     PtrOrden orden = new(Orden);
     orden->id = contadorOrdenes++;
-    orden->id_mesa = numeroMesa; //*********AQUI HAY QUE VALIDAR QUE LA MESA EXISTA */
+    orden->id_mesa = numeroMesa;
     orden->estado = true; // pendiente
 
     unordered_set<string> productosEnOrden;
@@ -105,7 +111,7 @@ void actualizarOrden(void* informacion){
     // pend
 }
 
-bool modificarOrdenesPendientes(int idOrden) {
+bool marcarOrdenCompletada(int idOrden) {
     PtrElemento actual = ListaOrdenes;
     while (actual != NULL) {
         PtrOrden orden = static_cast<PtrOrden>(actual->Informacion);
@@ -196,7 +202,7 @@ void modificarOrdenesPendientes() {
             int idOrden;
             cout << "Ingrese el ID de la orden a completar: ";
             cin >> idOrden;
-            bool completada = modificarOrdenesPendientes(idOrden);
+            bool completada = marcarOrdenCompletada(idOrden);
             if (completada) {
                 cout << GREEN << BOLD << "✓ Orden " << idOrden << " marcada como completada." << RESET << endl;
             } else {
