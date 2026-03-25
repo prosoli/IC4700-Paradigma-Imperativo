@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include "../../models/producto.h"
 #include "productoService.h"
 // #include "../models/elementolista.h"
@@ -6,22 +7,17 @@
 
 using namespace std;
 
-void* crearProducto(void){
+void* crearProducto(void** datos){
     PtrProducto producto = new(Producto);
-    cout<<"Ingrese el nombre del producto:"<<endl;
-    cin>>producto->Nombre;
-    cout<<"Ingrese el precio del producto:"<<endl;
-    cin>>producto->Precio;
+    strcpy(producto->Nombre, (char*)datos[0]);
+    producto->Precio = *(float*)datos[1];
     return (void*)producto;
 }
 
-void actualizarProducto(void* informacion){
+void actualizarProducto(void* informacion, void** datos){
     PtrProducto producto = static_cast<PtrProducto>(informacion);
-    cout<<"-Modificar el producto-"<<endl;
-    cout<<"Ingrese el nuevo nombre:"<<endl;
-    cin>>producto->Nombre;
-    cout<<"Ingrese el nuevo precio:"<<endl;
-    cin>>producto->Precio;
+    strcpy(producto->Nombre, (char*)datos[0]);
+    producto->Precio = *(float*)datos[1];
 }
 
 void leerProducto(void* informacion){

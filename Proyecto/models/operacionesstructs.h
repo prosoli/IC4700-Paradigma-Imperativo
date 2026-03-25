@@ -1,8 +1,8 @@
 #pragma once
 
 struct OperacionesStructs {
-    void*  (*creacion)(void);
+    void*  (*creacion)(void**);
     void  (*listado)(void*);
-    void  (*actualizacion)(void*);
+    void  (*actualizacion)(void*, void**);
     void (*eliminacion)(void*);
 };
