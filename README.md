@@ -673,7 +673,104 @@ Ingrese el ID de la orden a completar: 1
 
 ### Paso 10: Gestión de Mesas
 
-EN CONSTRUCCIÓN
+- Descripción:
+En esta etapa se administra la configuración de las mesas del restaurante. El sistema permite modificar el listado de mesas disponibles, agregando nuevos números de mesa, eliminando los que ya no se usan o estableciendo una lista completa desde cero.
+
+#### Paso 10.1: Acceder al menú de mesas
+
+Desde el panel principal del servidor, selecciona la opción `3. Mesas`.
+
+Verás el menú de gestión de mesas con la lista actual de mesas y las opciones disponibles.
+
+```bash
+╔══════════════════════════════════════════════════════╗
+║               PANEL DEL RESTAURANTE                  ║
+╠══════════════════════════════════════════════════════╣
+   Gestion de Mesas                                
+╚══════════════════════════════════════════════════════╝
+────────────────────────────────────────────────────────
+Mesas actuales: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+────────────────────────────────────────────────────────
+  [1] Agregar una mesa (por ID)
+  [2] Eliminar una mesa (por ID)
+  [3] Establecer lista completa de mesas
+  [0] Volver al menu principal
+────────────────────────────────────────────────────────
+
+Seleccione una opcion: 
+```
+
+#### Paso 10.2: Agregar una mesa (opción 1)
+Agrega un nuevo número de mesa al sistema. El sistema verificará que el ID no exista ya y lo insertará ordenado automáticamente.
+
+Elige `1`.
+
+Ingresa el ID numérico de la nueva mesa (entero positivo).
+
+Si el ID es válido y no está repetido, se mostrará un mensaje de éxito.
+
+```bash
+Seleccione una opcion: 1
+
+Ingrese el ID de la nueva mesa: 15
+Mesa 15 agregada.
+
+Presione Enter para continuar...
+```
+
+Resultado: La lista de mesas se actualiza y se ordena de menor a mayor. Si se intenta agregar un ID ya existente, el sistema lo ignora sin duplicar.
+
+#### Paso 10.3: Eliminar una mesa (opción 2)
+Remueve un número de mesa del listado. El sistema buscará el ID y, si existe, lo eliminará.
+
+Elige `2`.
+
+Ingresa el ID de la mesa a eliminar.
+
+Si el ID existe, se confirma la eliminación.
+
+```bash
+Seleccione una opcion: 2
+
+Ingrese el ID de la mesa a eliminar: 4
+Mesa 4 eliminada.
+
+Presione Enter para continuar...
+```
+
+Resultado: El ID desaparece de la lista. Si el ID no existe, se muestra un mensaje de error y la lista permanece igual.
+
+#### Paso 10.4: Establecer lista completa de mesas (opción `3`)
+Reemplaza toda la lista de mesas por una nueva, ingresada manualmente como una secuencia de números separados por espacios. Es útil para configurar rápidamente la disposición actual del salón.
+
+Elige `3`.
+
+Ingresa los IDs separados por espacios (ejemplo: 1 3 5 8).
+
+El sistema ordenará los números y eliminará duplicados automáticamente.
+
+```bash
+Seleccione una opcion: 3
+
+Ingrese los IDs separados por espacios (ejemplo: 1 3 5 8): 1 3 4 2
+Lista de mesas actualizada.
+
+Presione Enter para continuar...
+```
+
+Resultado: La lista de mesas se convierte en la nueva secuencia, ordenada y sin repetidos. En el ejemplo, se obtiene [1, 2, 3, 4].
+
+- Verificación de cambios
+Después de cualquier operación, el menú mostrará la lista actualizada automáticamente. Puedes salir y volver a entrar para confirmar.
+
+```bash
+Mesas actuales: [1, 2, 3, 4]
+────────────────────────────────────────────────────────
+  [1] Agregar una mesa (por ID)
+  [2] Eliminar una mesa (por ID)
+  [3] Establecer lista completa de mesas
+  [0] Volver al menu principal
+```
 
 ### Paso 11: Cerrar sistema
 
