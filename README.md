@@ -396,16 +396,180 @@ Presione Enter para continuar...
 
 ### Paso 6: Gestión en servidor
 
-EN CONSTRUCCION
+Descripción: Este paso abre la interfaz orientada a la gestión del restaurante con respecto a productos, pedidos y mesas. Desde aquí el usuario final puede crear, consultar y modificar productos, ordenes y mesas mediante un menú guiado.  
 
-### Paso 7: Cerrar sistema
+Ejecuta ./build/servidor en otra terminal.
+
+Elige opciones del menú:
+  - Gestión de Productos 
+  - Gestión de Ordenes
+  - Gestión de Mesas
+
+``` bash
+
+╔══════════════════════════════════════════════════════╗
+║               PANEL DEL RESTAURANTE                  ║
+╠══════════════════════════════════════════════════════╣
+   Gestion del Restaurante                         
+╚══════════════════════════════════════════════════════╝
+────────────────────────────────────────────────────────
+  [1] Productos
+  [2] Ordenes
+  [3] Mesas
+  [0] Salir
+────────────────────────────────────────────────────────
+Seleccione una opcion: 
+
+```
+
+### Paso 8: Gestión de Productos
+
+EN CONSTRUCCIÓN
+
+### Paso 9: Gestión de Ordenes
+
+Descripción: En esta etapa se gestionan las ordene, se pueden visualizar las ordenes totales y pendientes asi como modificarse
+
+```bash
+╔══════════════════════════════════════════════════════╗
+║               PANEL DEL RESTAURANTE                  ║
+╠══════════════════════════════════════════════════════╣
+   Gestion de Ordenes                              
+╚══════════════════════════════════════════════════════╝
+────────────────────────────────────────────────────────
+  [1] Visualizar ordenes
+  [2] Visualizar ordenes pendientes
+  [3] Modificar ordenes
+  [0] Volver al menu principal
+────────────────────────────────────────────────────────
+Seleccione una opcion:
+
+```
+
+#### Paso 9.1: Visualización de ordenes  
+
+Aquí consultas los detalles de las órdenes registradas. Sirve para revisar rápidamente qué pedidos existen tanto pendientes como completados y para verificar si los cambios aplicados se reflejaron correctamente.  
+
+Flujo paso a paso recomendado:
+
+  1. Selecciona Visualizar Órdenes en el menú de ordenes del servidor.
+  2. Espera la respuesta del servidor.
+  3. Revisa cada orden mostrada: ID, mesa, estado y productos.
+  4. Usa esta vista para validar si una creación/modificación se aplicó correctamente.
+
+Cómo interpretar lo que ves:
+
+1. Si aparecen órdenes:
+  - el cliente está funcionando correctamente y existen pedidos registrados.
+2. Si aparece `No se encontraron órdenes en la respuesta`:
+  - puede que no haya órdenes aún, o el endpoint aún no esté retornando datos en esa ejecución.
+
+Qué revisar si no ves órdenes y esperabas verlas:
+
+1. Confirma que el el cliente esté encendido.
+2. Crea una orden nueva y vuelve a consultar.
+3. Verifica en el menú de órdenes del servidor si la orden existe allí.
+
+``` bash
+
+╔════════════════════════════════════════════╗
+║       ÓRDENES REGISTRADAS EN SISTEMA       ║
+╚════════════════════════════════════════════╝
+1.   ┌─ Orden #1
+  ├─ Mesa: 1
+  ├─ Productos:
+  │   • Pizza (2 ud)
+  └─ Estado: Pendiente
+
+2.   ┌─ Orden #2
+  ├─ Mesa: 5
+  ├─ Productos:
+  │   • Hamburguesa (2 ud)
+  └─ Estado: Completada
+```
+
+#### Paso 9.2: Visualización de ordenes pendientes 
+
+Aquí consultas el total de las ordenes que están pendientes. También, sirve para revisar rápidamente qué pedidos han sido completados y ya no debería de mostrarse en las ordenes pendientes o bien si hay nuevos pedidos.  
+
+Flujo paso a paso recomendado:
+
+  1. Selecciona Visualizar Órdenes Pendientes en el menú de ordenes del servidor.
+  2. Espera la respuesta del servidor.
+  3. Revisa cada orden mostrada: ID, mesa, estado y productos.
+  4. Usa esta vista para validar si una creación/modificación se aplicó correctamente.
+
+Cómo interpretar lo que ves:
+
+1. Si aparecen órdenes:
+  - el cliente está funcionando correctamente y existen pedidos registrados.
+  - existen pedidos pendientes
+2. Si aparece `No se encontraron órdenes en la respuesta`:
+  - puede que no haya órdenes aún, todas las ordenes están en estado *completado* o el endpoint aún no esté retornando datos en esa ejecución.
+
+Qué revisar si no ves órdenes y esperabas verlas:
+
+1. Confirma que el el cliente esté encendido.
+2. Crea una orden nueva y vuelve a consultar que se registró.
+
+``` bash
+
+╔════════════════════════════════════════════╗
+║         ÓRDENES PENDIENTES POR ENTREGAR    ║
+╚════════════════════════════════════════════╝
+
+  ┌─ Orden #2
+  ├─ Mesa: 1
+  ├─ Productos:
+  │   • Pizza (2 ud)
+  └─ Estado: Pendiente
+
+```
+
+#### Paso 9.3: Modificación de ordenes  
+
+Descripción: En esta etapa se modifican las ordenes creadas en el cliente, la modificación se hace solo para cambiar el estado del pedido de *Pendiente* a *Completada* enviando unicamente el ID de la orden. Si todo es válido, el servidor responde confirmación y la orden queda modificada.  
+
+**Cómo manipular la parte de modificar ordenes (detalle)**
+Cuando el sistema te pregunte por cual orden quiere completar, usa este flujo:
+
+1.  Ingrese a la opcion de *Visualizar ordenes* en el menú de este.
+2.  Visualice cual es la orden que desee completar y su ID.
+3.  Ingrese al menu de modificación y digite el ID correspondiente.
+4.  Espere respuesta del servidor para confirmar que la orden ha sido modificada.
+
+```bash
+╔════════════════════════════════════════════╗
+║       MARCAR ORDEN COMO COMPLETADA         ║
+╠════════════════════════════════════════════╣
+║  [1] Marcar orden como completada         ║
+║  [0] Volver                                 ║
+╚════════════════════════════════════════════╝
+Opción: 1
+
+```
+
+
+```bash
+Ingrese el ID de la orden a completar: 1
+✓ Orden 1 marcada como completada.
+
+```
+
+
+
+### Paso 10: Gestión de Mesas
+
+EN CONSTRUCCIÓN
+
+### Paso 11: Cerrar sistema
 
 Descripción:
 Finaliza la sesión de trabajo de forma segura. Al cerrar desde el flujo correcto, se evitan procesos colgados y se libera el puerto del servidor.
 
 1. Cierra cliente.
 2. En servidor, usa `Salir` en el menú principal.
-3. Esto detiene la escucha y apaga el servidor.
+3. Esto detiene la escucha y apaga el servidor.  
 
 ---
 
