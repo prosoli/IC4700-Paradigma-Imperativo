@@ -424,11 +424,124 @@ Seleccione una opcion:
 
 ### Paso 8: Gestión de Productos
 
-EN CONSTRUCCIÓN
+Descripción: En esta etapa se gestionan los productos. Se puede visualizar la lista de productos, así como agregar, actualizar o eliminar un producto, e incluso vaciar la lista de productos.
+
+```bash
+╔══════════════════════════════════════════════════════╗
+║               PANEL DEL RESTAURANTE                  ║
+╠══════════════════════════════════════════════════════╣
+   Gestion de Productos                             
+╚══════════════════════════════════════════════════════╝
+────────────────────────────────────────────────────────
+  [1] Listar productos
+  [2] Agregar un producto
+  [3] Actualizar un producto
+  [4] Eliminar un producto
+  [5] Eliminar todos los productos
+  [0] Volver al menu principal
+────────────────────────────────────────────────────────
+Seleccione una opcion:
+
+```
+
+#### Paso 8.1: Listar productos 
+
+Aquí consultas los detalles de las productos registrados. Sirve para revisar rápidamente qué productos hay disponibles, y para verificar si los cambios aplicados se reflejaron correctamente.
+Flujo paso a paso recomendado:
+
+  1. Selecciona Listar productos (1) en el menú de productos del servidor.
+  2. Espera la respuesta del servidor.
+  3. Revisa cada producto mostrado: Nombre y precio.
+  4. Usa esta vista para validar si una creación/modificación se aplicó correctamente.
+
+``` bash
+
+======= Productos registrados =======
+1. Pizza, CR3500
+2. Hamburguesa, CR4800
+
+```
+
+#### Paso 8.2: Agregar un producto
+
+Aquí registras un producto nuevo, indicando su nombre y su precio.
+Flujo paso a paso recomendado:
+
+  1. Selecciona Agregar un producto (2) en el menú de productos del servidor.
+  2. Espera la respuesta del servidor.
+  3. Ingresa el nombre que tendrá el producto.
+  4. Ingresa el precio (en números) que tendrá el producto.
+  5. Utiliza la opción Listar productos (1) en el menú de productos del servidor para confirmar que se registró el nuevo producto.
+
+``` bash
+
+--Agregar un producto--
+Ingrese el nombre del producto:
+Pizza
+Ingrese el precio del producto: 3500
+
+```
+
+#### Paso 8.3: Actualizar un producto
+
+Aquí actualizas la información de un producto previamente registrado, indicando su nuevo nombre y su nuevo precio.
+Flujo paso a paso recomendado:
+
+  1. Utiliza la opción Listar productos (1) en el menú de productos del servidor para verificar el índice (número identificador) del producto que quieres actualizar.
+  2. Selecciona Actualizar un producto (3) en el menú de productos del servidor.
+  3. Espera la respuesta del servidor.
+  4. Ingresa el indice del producto.
+  5. Ingresa el nuevo nombre que tendrá el producto.
+  6. Ingresa el nuevo precio (en números) que tendrá el producto.
+  7. Utiliza la opción Listar productos (1) en el menú de productos del servidor para confirmar que se registró el cambio en la información del producto.
+
+``` bash
+
+--Actualizar un producto--
+Ingrese el indice del producto a actualizar: 2
+Ingrese el nuevo nombre del producto:
+Hamburguesa
+Ingrese el nuevo precio del producto: 5000
+
+```
+
+#### Paso 8.4: Eliminar un producto
+
+Aquí eliminas un producto de la lista de productos registrados.
+Flujo paso a paso recomendado:
+
+  1. Utiliza la opción Listar productos (1) en el menú de productos del servidor para verificar el índice (número identificador) del producto que quieres eliminar.
+  2. Selecciona Eliminar un producto (4) en el menú de productos del servidor.
+  3. Espera la respuesta del servidor.
+  4. Ingresa el indice del producto.
+  5. Utiliza la opción Listar productos (1) en el menú de productos del servidor para confirmar que se eliminó el producto.
+
+``` bash
+
+--Eliminar un producto--
+Ingrese el indice del producto a eliminar: 1
+
+```
+
+#### Paso 8.5: Eliminar todos los productos
+
+Aquí vacías por completo la lista de productos registrados.
+Flujo paso a paso recomendado:
+
+  1. Selecciona Eliminar todos los productos (5) en el menú de productos del servidor.
+  2. Espera la respuesta del servidor (en este caso es una confirmación de borrado).
+  3. Utiliza la opción Listar productos (1) en el menú de productos del servidor para confirmar que la lista de productos está vacía.
+
+``` bash
+
+--Lista eliminada--
+
+```
+
 
 ### Paso 9: Gestión de Ordenes
 
-Descripción: En esta etapa se gestionan las ordene, se pueden visualizar las ordenes totales y pendientes asi como modificarse
+Descripción: En esta etapa se gestionan las ordenes, se pueden visualizar las ordenes totales y pendientes asi como modificarse
 
 ```bash
 ╔══════════════════════════════════════════════════════╗
