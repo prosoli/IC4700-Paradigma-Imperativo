@@ -876,7 +876,7 @@ Cliente (UI consola) -> JSON -> Socket TCP -> Servidor (lógica + listas enlazad
 
 - Escucha conexiones
 - Procesa solicitud por `Type`
-- Ejecuta reglas de negocio
+- Ejecuta reglas de negocio como gestionar ordnees, productos y mesas
 - Devuelve respuesta JSON
 
 ### Dominio y datos
@@ -896,12 +896,18 @@ Advertencia:
 
 ## Flujo de orden
 
-1. Cliente captura datos.
-2. Cliente envía JSON.
-3. Servidor valida.
-4. Si es válido, crea e inserta orden en `ListaOrdenes`.
-5. Servidor responde éxito/error.
-6. Cliente muestra respuesta.
+1. El usuario interactúa con el menú en el cliente.
+2. El cliente genera un JSON con un Type.
+   - ViewTables
+   - CreateOrder
+   - ViewOrders
+   - ModifyOrder
+   - ViewProducts
+4. El cliente envía este JSON al servidor a través de un socket TCP.
+5. El servidor recibe el mensaje, lo procesa y enruta la solicitud según el Type.
+6. El servidor usa servicios de negocio como manejo de órdenes, productos, mesas para procesar la solicitud.
+7. El servidor responde con un JSON.
+8. El cliente parsea la respuesta y la muestra en la consola.
 
   </details>  
 
