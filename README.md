@@ -923,6 +923,9 @@ Advertencia:
 
 ![Diag1](https://github.com/prosoli/IC4700-Paradigma-Imperativo/blob/main/Imagenes/Arquitectura%20Logica-P%C3%A1gina-2.drawio.svg)
 
+## Modelo cliente-servidor    
+![Diag1](https://github.com/prosoli/IC4700-Paradigma-Imperativo/blob/main/Imagenes/Arquitectura%20Logica-P%C3%A1gina-1.drawio.svg)
+
   </details>  
 
 
