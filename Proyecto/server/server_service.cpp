@@ -202,21 +202,14 @@ nlohmann::json modifyOrderHandler(const nlohmann::json& json_msg) {
 
 std::string procesarMensajeServidor(const std::string& mensaje) {
 	if (mensaje.empty()) {
-		cout << "No se recibio mensaje o error de lectura." << endl;
 		return nlohmann::json({
 			{"ok", false},
 			{"error", "Mensaje vacio."}
 		}).dump();
 	}
 
-	cout << "Mensaje recibido del cliente (raw):" << endl;
-	cout << mensaje << endl;
-
 	try {
 		nlohmann::json json_msg = nlohmann::json::parse(mensaje);
-		for (auto it = json_msg.begin(); it != json_msg.end(); ++it) {
-			cout << it.key() << ": " << it.value() << endl;
-		}
 
 		if (!json_msg.contains("Type") || !json_msg["Type"].is_number_integer()) {
 			return nlohmann::json({
@@ -247,7 +240,6 @@ std::string procesarMensajeServidor(const std::string& mensaje) {
 				}).dump();
 		}
 	} catch (const std::exception& e) {
-		cout << "No se pudo parsear el mensaje como JSON: " << e.what() << endl;
 		return nlohmann::json({
 			{"ok", false},
 			{"error", "JSON invalido."}
