@@ -909,6 +909,10 @@ Advertencia:
 7. El servidor responde con un JSON.
 8. El cliente parsea la respuesta y la muestra en la consola.
 
+## Diagrama de arquitectura  
+
+![Diag1](https://github.com/prosoli/IC4700-Paradigma-Imperativo/blob/main/Imagenes/Arquitectura%20Logica-P%C3%A1gina-2.drawio.svg)
+
   </details>  
 
 
