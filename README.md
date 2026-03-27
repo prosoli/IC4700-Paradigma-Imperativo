@@ -16,6 +16,16 @@
 ---
 ### [Repositorio de Github](https://github.com/prosoli/IC4700-Paradigma-Imperativo)
 
+
+# INDICE
+
+- [Pasos de Instalación](#pasos-de-instalación)
+- [Manual de usuario](#manual-de-usuario)
+- [Arquitectura lógica](#arquitectura-lógica)
+- [Librerias Utilizadas](#librerias-utilizadas)
+
+
+
 # Pasos de Instalación  
 
 <details>
