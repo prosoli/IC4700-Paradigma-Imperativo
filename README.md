@@ -263,24 +263,27 @@ Verificación antes de confirmar:
 ╔══════════════════════════════════════════════════════════════╗
                 MESAS DISPONIBLES
 ╠══════════════════════════════════════════════════════════════╣
-
+Mesas disponibles:
+[ 1 ]  [ 2 ]  [ 3 ]  [ 4 ]  [ 5 ]  [ 6 ]  [ 7 ]  [ 8 ]  [ 9 ]  [ 10 ]  
 ╚══════════════════════════════════════════════════════════════╝
 Presione Enter para continuar...
-Ingrese el número de mesa: 2
+Ingrese el número de mesa: 9
 ╔══════════════════════════════════════════════════════════════╗
                 PRODUCTOS DISPONIBLES
 ╠══════════════════════════════════════════════════════════════╣
-No se encontraron productos en la respuesta.
+Productos disponibles:
+Producto: "Taco" | Precio: 1200.0
+Producto: "Sushi" | Precio: 12000.0
 ╚══════════════════════════════════════════════════════════════╝
 Presione Enter para continuar...
 
-Ingrese el producto o platillo a agregar: Pizza
-Ingrese la cantidad a agregar: 2
+Ingrese el producto o platillo a agregar: Sushi
+Ingrese la cantidad a agregar: 1
 ¿Desea agregar otro producto? (s/n): n
 ──────────────────────────────────────────────────────────────
 Orden creada:
-Mesa: 2
-Producto: Pizza | Cantidad: 2
+Mesa: 9
+Producto: Sushi | Cantidad: 1
 ──────────────────────────────────────────────────────────────
 Presione Enter para continuar...
 
@@ -327,7 +330,11 @@ Ejemplo guiado de modificación:
 ╔══════════════════════════════════════════════════════════════╗
                 ÓRDENES ACTUALES
 ╠══════════════════════════════════════════════════════════════╣
-No se encontraron órdenes en la respuesta.
+Orden ID: 1
+Mesa: 9
+Productos:
+  - Sushi: 1
+──────────────────────────────────────────────────────────────
 ╚══════════════════════════════════════════════════════════════╝
 Presione Enter para continuar...
 ╔══════════════════════════════════════════════════════════════╗
@@ -337,22 +344,27 @@ Ingrese el ID de la orden a modificar: 1
 ╔══════════════════════════════════════════════════════════════╗
                 PRODUCTOS DISPONIBLES
 ╠══════════════════════════════════════════════════════════════╣
-No se encontraron productos en la respuesta.
+Productos disponibles:
+Producto: "Taco" | Precio: 1200.0
+Producto: "Sushi" | Precio: 12000.0
 ╚══════════════════════════════════════════════════════════════╝
-Presione Enter para continuar...
+Presione Enter para continuar...Taco
 
-Ingrese el producto o platillo a modificar/agregar: Pizza
-Ingrese la nueva cantidad (0 para eliminar): 0
-¿Desea modificar/agregar otro producto? (s/n): s
-Ingrese el producto o platillo a modificar/agregar: Arroz
-Ingrese la nueva cantidad (0 para eliminar): 3
+Ingrese el producto o platillo a modificar/agregar: Taco
+Ingrese la nueva cantidad (0 para eliminar): 2
 ¿Desea modificar/agregar otro producto? (s/n): n
 ──────────────────────────────────────────────────────────────
 Modificación a aplicar en la orden 1:
-Eliminar producto: Pizza
-Producto: Arroz | Nueva cantidad: 3
+Producto: Taco | Nueva cantidad: 2
 ──────────────────────────────────────────────────────────────
 Presione Enter para continuar...
+
+╔══════════════════════════════════════════════════════════════╗
+¿Está seguro que desea realizar esta acción?
+╠══════════════════════════════════════════════════════════════╣
+1. Si
+2. No
+╚══════════════════════════════════════════════════════════════╝
 
 ```
 
@@ -387,9 +399,14 @@ Qué revisar si no ves órdenes y esperabas verlas:
 ╔══════════════════════════════════════════════════════════════╗
                 ÓRDENES ACTUALES
 ╠══════════════════════════════════════════════════════════════╣
-No se encontraron órdenes en la respuesta.
+Orden ID: 1
+Mesa: 9
+Productos:
+  - Sushi: 1
+──────────────────────────────────────────────────────────────
 ╚══════════════════════════════════════════════════════════════╝
 Presione Enter para continuar...
+
 
 
 ```
